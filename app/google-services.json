@@ -1,0 +1,73 @@
+{
+  "project_info": {
+    "project_number": "817016367972",
+    "firebase_url": "https://myfirstfirebase-78965.firebaseio.com",
+    "project_id": "myfirstfirebase-78965",
+    "storage_bucket": "myfirstfirebase-78965.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:817016367972:android:5b7645dbb95c5355",
+        "android_client_info": {
+          "package_name": "com.watniwat.android.myfirstfirebase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "817016367972-7vv8t1rrhknmrv3svvgohu3mf4opcjcs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxJw3XuISmnq4MbmkM7QB2KiFAcbucWPQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:817016367972:android:a15ca858dafb3811",
+        "android_client_info": {
+          "package_name": "com.watniwat.android.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "817016367972-7vv8t1rrhknmrv3svvgohu3mf4opcjcs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxJw3XuISmnq4MbmkM7QB2KiFAcbucWPQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

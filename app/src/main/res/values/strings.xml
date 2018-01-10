@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="action_settings">Settings</string>
+    <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
+    <string name="facebook_application_id" translatable="false">1901039516880203</string>
+    <string name="facebook_login_protocol_scheme" translatable="false">fb1901039516880203</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!--<string name="default_web_client_id"> 155905099753-co6ahs4qgktrkvfrk6qo54ts8jq26lne.apps.googleusercontent.com </string>-->
+</resources>
