@@ -30,12 +30,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.watniwat.android.myapplication.Course.CourseDetailActivity;
 import com.watniwat.android.myapplication.Create.CreateCourseActivity;
 import com.watniwat.android.myapplication.R;
+import com.watniwat.android.myapplication.Register.RegisterCourseActivity;
 import com.watniwat.android.myapplication.SignIn.SignInActivity;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private static final int RC_CREATE_COURSE = 1234;
+    private static final int RC_REGISTER_COURSE = 5678;
     public static final String EXTRA_COURSE_UID = "courseUID";
     private Toolbar mToolbar;
     private FloatingActionButton mFab;
@@ -83,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                startActivityForResult(new Intent(getApplicationContext(), RegisterCourseActivity.class), RC_REGISTER_COURSE);
             }
         });
     }
@@ -123,6 +126,12 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 showToast("Course created");
             } else showToast("Cancel creating course");
+        }
+
+        if (requestCode == RC_REGISTER_COURSE) {
+            if (requestCode == RESULT_OK) {
+                showToast("Course Registered");
+            } else showToast("Error registering course");
         }
 
     }

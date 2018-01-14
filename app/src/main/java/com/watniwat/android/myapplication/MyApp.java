@@ -12,4 +12,10 @@ public class MyApp extends android.app.Application {
         super.onCreate();
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
     }
+
+    public interface SimpleCallback {
+        void callback(Object data);
+    }
 }
+
+
