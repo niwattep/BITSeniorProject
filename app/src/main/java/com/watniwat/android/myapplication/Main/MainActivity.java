@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,13 +31,14 @@ import com.watniwat.android.myapplication.Create.CreateCourseActivity;
 import com.watniwat.android.myapplication.R;
 import com.watniwat.android.myapplication.Register.RegisterCourseActivity;
 import com.watniwat.android.myapplication.SignIn.SignInActivity;
+import com.watniwat.android.myapplication.Utilities;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private static final int RC_CREATE_COURSE = 1234;
     private static final int RC_REGISTER_COURSE = 5678;
-    public static final String EXTRA_COURSE_UID = "courseUID";
+    public static final String EXTRA_COURSE_UID = "extra-course-uid";
     private Toolbar mToolbar;
     private FloatingActionButton mFab;
     private RecyclerView mCourseRecyclerView;
@@ -48,10 +48,6 @@ public class MainActivity extends AppCompatActivity {
     private GoogleApiClient mGoogleApiClient;
     private FirebaseUser user;
 
-    private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mRootRef;
-    private DatabaseReference mUserRef;
-    private DatabaseReference mCoursesRef;
     private DatabaseReference mUserCoursesRef;
     private DatabaseReference mThisUserCoursesRef;
 
@@ -65,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
         setupGoogleSignIn();
         setupFirebaseAuth();
         setupFirebaseDatabase();
-        welcome();
 
         loadCourses();
 
@@ -76,15 +71,12 @@ public class MainActivity extends AppCompatActivity {
         mToolbar = findViewById(R.id.toolbar);
         mFab = findViewById(R.id.fab);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void setListener() {
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
                 startActivityForResult(new Intent(getApplicationContext(), RegisterCourseActivity.class), RC_REGISTER_COURSE);
             }
         });
@@ -103,18 +95,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupFirebaseAuth() {
         user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            String uid = user.getUid();
-        } else {
+        if (user == null) {
             goToLoginScreen();
         }
     }
 
     private void setupFirebaseDatabase() {
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mCoursesRef = mFirebaseDatabase.getReference("courses");
-        mUserRef = mFirebaseDatabase.getReference("users");
-        mUserCoursesRef = mFirebaseDatabase.getReference("user-courses");
+        mUserCoursesRef = FirebaseDatabase.getInstance().getReference("user-courses");
         mThisUserCoursesRef = mUserCoursesRef.child(user.getUid());
     }
 
@@ -124,14 +111,14 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == RC_CREATE_COURSE) {
             if (resultCode == RESULT_OK) {
-                showToast("Course created");
-            } else showToast("Cancel creating course");
+                Utilities.showToast("Course created", this);
+            } else Utilities.showToast("Cancel creating course", this);
         }
 
         if (requestCode == RC_REGISTER_COURSE) {
             if (requestCode == RESULT_OK) {
-                showToast("Course Registered");
-            } else showToast("Error registering course");
+                Utilities.showToast("Course Registered", this);
+            } else Utilities.showToast("Cancel registering course", this);
         }
 
     }
@@ -161,18 +148,10 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void welcome() {
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        Toast.makeText(this,"Welcome " + user.getDisplayName()
-                + " " + user.getUid()
-                + " " + user.getEmail()
-                + " " + user.getPhoneNumber(), Toast.LENGTH_LONG).show();
-    }
-
     private void loadCourses() {
         courseItems = new ArrayList<>();
         setupCourseItemsRecyclerView();
-        mThisUserCoursesRef.addChildEventListener(onCoursesEvent());
+        mThisUserCoursesRef.addChildEventListener(onCourseItemsEventListener());
         Log.d("ME", "Child event listener added. The size of courseItems is " + courseItems.size());
     }
 
@@ -180,13 +159,11 @@ public class MainActivity extends AppCompatActivity {
         mCourseItemAdapter = new CourseItemAdapter(this, courseItems);
         mCourseItemAdapter.setOnItemClickListener(onCourseItemClick());
 
-        Log.d("ME", "Passing courseItems to an adapter, the initial size is " + courseItems.size());
-
         mCourseRecyclerView.setAdapter(mCourseItemAdapter);
         mCourseRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    private ChildEventListener onCoursesEvent() {
+    private ChildEventListener onCourseItemsEventListener() {
         return new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -202,7 +179,9 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+                CourseItem removedCourse = dataSnapshot.getValue(CourseItem.class);
+                courseItems.remove(removedCourse);
+                mCourseItemAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -212,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Utilities.showToast("Error loading data.", getApplicationContext());
             }
         };
     }
@@ -246,16 +225,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onSignOutFailure() {
-        Toast.makeText(this, "Sign out fail", Toast.LENGTH_SHORT).show();
+        Utilities.showToast("Sign out failed. Please try again.", this);
     }
 
     private void goToLoginScreen() {
         finish();
         startActivity(new Intent(this, SignInActivity.class));
     }
-
-    private void showToast(String text) {
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
-    }
-
 }
