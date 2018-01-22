@@ -22,15 +22,17 @@ public class Message {
     private String dataType;
     private String data;
     private String photoUrl;
+    private long timeStamp;
 
     public Message() {}
 
-    public Message(String userUId, String userName, String dataType, String data, String photoUrl) {
+    public Message(String userUId, String userName, String dataType, String data, String photoUrl, long timeStamp) {
         this.userUId = userUId;
         this.userName = userName;
         this.dataType = dataType;
         this.data = data;
         this.photoUrl = photoUrl;
+        this.timeStamp = timeStamp;
     }
 
     public String getUserUId() {
@@ -51,6 +53,10 @@ public class Message {
 
     public String getPhotoUrl() {
         return photoUrl;
+    }
+
+    public long getTimeStamp() {
+        return timeStamp;
     }
 
     @Override

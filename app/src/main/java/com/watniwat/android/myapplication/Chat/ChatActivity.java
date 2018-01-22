@@ -99,7 +99,6 @@ public class ChatActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setStackFromEnd(true);
         linearLayoutManager.setReverseLayout(true);
-        //linearLayoutManager.setSmoothScrollbarEnabled(false);
         mChatRecyclerView.setLayoutManager(linearLayoutManager);
     }
 
@@ -111,7 +110,6 @@ public class ChatActivity extends AppCompatActivity {
                 messageList.add(0, message);
                 mMessageAdapter.notifyDataSetChanged();
                 mChatRecyclerView.scrollToPosition(0);
-                //mChatRecyclerView.scrollToPosition(0);
             }
 
             @Override
@@ -162,7 +160,8 @@ public class ChatActivity extends AppCompatActivity {
             if (user != null) {
                 DatabaseReference databaseReference = mThisCourseMessagesReference.push();
                 Message message = new Message(user.getUid(), user.getDisplayName(),
-                        Message.DATA_TYPE_TEXT, text, user.getPhotoUrl().toString());
+                        Message.DATA_TYPE_TEXT, text, user.getPhotoUrl().toString(),
+                        System.currentTimeMillis());
                 databaseReference.setValue(message);
                 mMessageEditText.setText("");
             } else {

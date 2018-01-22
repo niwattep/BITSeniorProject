@@ -18,6 +18,7 @@ public class MessageViewHolder extends RecyclerView.ViewHolder {
     public TextView mMessageTextView;
     public ImageView mImageMessageImageView;
     public CircleImageView mProfileImageView;
+    public TextView mTimeStampTextView;
 
     public MessageViewHolder(View view) {
         super(view);
@@ -25,5 +26,6 @@ public class MessageViewHolder extends RecyclerView.ViewHolder {
         mMessageTextView = view.findViewById(R.id.tv_message);
         mImageMessageImageView = view.findViewById(R.id.iv_message);
         mProfileImageView = view.findViewById(R.id.iv_profile);
+        mTimeStampTextView = view.findViewById(R.id.tv_time_stamp);
     }
 }

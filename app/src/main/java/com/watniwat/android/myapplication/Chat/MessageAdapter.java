@@ -9,6 +9,11 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.watniwat.android.myapplication.R;
 
+import java.sql.Time;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -47,6 +52,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
         holder.mMessageTextView.setText(message.getData());
         holder.mNameTextView.setText(message.getUserName());
         Glide.with(holder.itemView.getContext()).load(message.getPhotoUrl()).into(holder.mProfileImageView);
+        Date dateTime = new Date(message.getTimeStamp());
+        DateFormat formatter = new SimpleDateFormat("HH:mm");
+        holder.mTimeStampTextView.setText(formatter.format(dateTime));
     }
 
     @Override

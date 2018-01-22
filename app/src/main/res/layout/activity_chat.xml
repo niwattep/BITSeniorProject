@@ -45,12 +45,12 @@
             android:layout_marginEnd="2dp"
             android:layout_marginStart="2dp"
             android:layout_weight="1"
-            android:inputType="text" />
+            android:inputType="textMultiLine" />
 
         <Button
             android:id="@+id/btn_send_message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
             android:layout_marginEnd="2dp"
             android:minWidth="0dp"
             android:paddingEnd="2dp"

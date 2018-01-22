@@ -16,9 +16,9 @@
             android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+            android:layout_gravity="right"
             android:layout_marginBottom="2dp"
-            android:gravity="center_horizontal"
+            android:gravity="right"
             android:textSize="8sp"/>
 
         <me.himanshusoni.chatmessageview.ChatMessageView
@@ -34,7 +34,8 @@
             <TextView
                 android:id="@+id/tv_message"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:maxWidth="200dp"/>
 
             <ImageView
                 android:id="@+id/iv_message"
@@ -43,6 +44,14 @@
                 android:contentDescription="@null"
                 android:scaleType="centerCrop" />
         </me.himanshusoni.chatmessageview.ChatMessageView>
+
+        <TextView
+            android:id="@+id/tv_time_stamp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="8sp"
+            android:gravity="right"
+            android:layout_gravity="right"/>
     </LinearLayout>
 
     <de.hdodenhof.circleimageview.CircleImageView
