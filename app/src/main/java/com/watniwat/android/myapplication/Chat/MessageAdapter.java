@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
 import com.watniwat.android.myapplication.R;
 
 import java.util.List;
@@ -45,6 +46,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
         Message message = messageList.get(position);
         holder.mMessageTextView.setText(message.getData());
         holder.mNameTextView.setText(message.getUserName());
+        Glide.with(holder.itemView.getContext()).load(message.getPhotoUrl()).into(holder.mProfileImageView);
     }
 
     @Override

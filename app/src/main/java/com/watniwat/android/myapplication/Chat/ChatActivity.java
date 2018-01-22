@@ -60,6 +60,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private void setupListener() {
         mSendButton.setOnClickListener(onSendButtonClick());
+        mMessageEditText.setOnFocusChangeListener(onMessageEditTextFocus());
     }
 
     private void setupFirebaseAuth() {
@@ -109,7 +110,7 @@ public class ChatActivity extends AppCompatActivity {
                 Message message = dataSnapshot.getValue(Message.class);
                 messageList.add(0, message);
                 mMessageAdapter.notifyDataSetChanged();
-                mChatRecyclerView.scrollToPosition(mMessageAdapter.getItemCount());
+                mChatRecyclerView.scrollToPosition(0);
                 //mChatRecyclerView.scrollToPosition(0);
             }
 
@@ -144,12 +145,24 @@ public class ChatActivity extends AppCompatActivity {
         };
     }
 
+    private View.OnFocusChangeListener onMessageEditTextFocus() {
+        return new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if (mMessageEditText.isFocused()) {
+                    mChatRecyclerView.scrollToPosition(0);
+                }
+            }
+        };
+    }
+
     private void sendMessage() {
         String text = mMessageEditText.getText().toString();
         if (!text.isEmpty()) {
             if (user != null) {
                 DatabaseReference databaseReference = mThisCourseMessagesReference.push();
-                Message message = new Message(user.getUid(), user.getDisplayName(), Message.DATA_TYPE_TEXT, text);
+                Message message = new Message(user.getUid(), user.getDisplayName(),
+                        Message.DATA_TYPE_TEXT, text, user.getPhotoUrl().toString());
                 databaseReference.setValue(message);
                 mMessageEditText.setText("");
             } else {

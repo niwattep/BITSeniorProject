@@ -21,14 +21,16 @@ public class Message {
     private String userName;
     private String dataType;
     private String data;
+    private String photoUrl;
 
     public Message() {}
 
-    public Message(String userUId, String userName, String dataType, String data) {
+    public Message(String userUId, String userName, String dataType, String data, String photoUrl) {
         this.userUId = userUId;
         this.userName = userName;
         this.dataType = dataType;
         this.data = data;
+        this.photoUrl = photoUrl;
     }
 
     public String getUserUId() {
@@ -45,6 +47,10 @@ public class Message {
 
     public String getData() {
         return data;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
     }
 
     @Override
