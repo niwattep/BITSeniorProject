@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.watniwat.android.myapplication.Create.CreateCourseActivity">
+    tools:context="com.watniwat.android.myapplication.Activity.CreateCourseActivity">
 
     <Button
         android:id="@+id/btn_create_course"

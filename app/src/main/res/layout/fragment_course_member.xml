@@ -2,12 +2,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.watniwat.android.myapplication.Course.CourseMemberFragment">
+    tools:context="com.watniwat.android.myapplication.Fragment.CourseMemberFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_member"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Members" />
+        android:layout_height="match_parent">
+
+    </android.support.v7.widget.RecyclerView>
 
 </RelativeLayout>
