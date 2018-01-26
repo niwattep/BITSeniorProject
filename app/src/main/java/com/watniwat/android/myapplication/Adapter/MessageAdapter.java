@@ -21,54 +21,54 @@ import java.util.List;
  */
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
-    private Context context;
-    private List<Message> messageList;
-    private String courseUId;
-    private String uId;
+	private Context context;
+	private List<Message> messageList;
+	private String courseUId;
+	private String uId;
 
-    public MessageAdapter(Context context, List<Message> messageList, String courseUId, String uId) {
-        this.context = context;
-        this.messageList = messageList;
-        this.courseUId = courseUId;
-        this.uId = uId;
-    }
+	public MessageAdapter(Context context, List<Message> messageList, String courseUId, String uId) {
+		this.context = context;
+		this.messageList = messageList;
+		this.courseUId = courseUId;
+		this.uId = uId;
+	}
 
-    @Override
-    public MessageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == Message.TYPE_MY_MESSAGE) {
-            View view = LayoutInflater.from(context)
-                    .inflate(R.layout.my_message_view_layout, parent, false);
-            return new MessageViewHolder(view);
-        } else {
-            View view = LayoutInflater.from(context)
-                    .inflate(R.layout.other_message_view_layout, parent, false);
-            return new MessageViewHolder(view);
-        }
-    }
+	@Override
+	public MessageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+		if (viewType == Message.TYPE_MY_MESSAGE) {
+			View view = LayoutInflater.from(context)
+					.inflate(R.layout.my_message_view_layout, parent, false);
+			return new MessageViewHolder(view);
+		} else {
+			View view = LayoutInflater.from(context)
+					.inflate(R.layout.other_message_view_layout, parent, false);
+			return new MessageViewHolder(view);
+		}
+	}
 
-    @Override
-    public void onBindViewHolder(MessageViewHolder holder, int position) {
-        Message message = messageList.get(position);
-        holder.mMessageTextView.setText(message.getData());
-        holder.mNameTextView.setText(message.getUserName());
-        Glide.with(holder.itemView.getContext()).load(message.getPhotoUrl()).into(holder.mProfileImageView);
-        Date dateTime = new Date(message.getTimeStamp());
-        DateFormat formatter = new SimpleDateFormat("HH:mm");
-        holder.mTimeStampTextView.setText(formatter.format(dateTime));
-    }
+	@Override
+	public void onBindViewHolder(MessageViewHolder holder, int position) {
+		Message message = messageList.get(position);
+		holder.mMessageTextView.setText(message.getData());
+		holder.mNameTextView.setText(message.getUserName());
+		Glide.with(holder.itemView.getContext()).load(message.getPhotoUrl()).into(holder.mProfileImageView);
+		Date dateTime = new Date(message.getTimeStamp());
+		DateFormat formatter = new SimpleDateFormat("HH:mm");
+		holder.mTimeStampTextView.setText(formatter.format(dateTime));
+	}
 
-    @Override
-    public int getItemCount() {
-        return messageList.size();
-    }
+	@Override
+	public int getItemCount() {
+		return messageList.size();
+	}
 
-    @Override
-    public int getItemViewType(int position) {
-        Message message = messageList.get(position);
-        if (message.getUserUId() != null && message.getUserUId().equals(uId)) {
-            return Message.TYPE_MY_MESSAGE;
-        } else {
-            return Message.TYPE_OTHER_MESSAGE;
-        }
-    }
+	@Override
+	public int getItemViewType(int position) {
+		Message message = messageList.get(position);
+		if (message.getUserUId() != null && message.getUserUId().equals(uId)) {
+			return Message.TYPE_MY_MESSAGE;
+		} else {
+			return Message.TYPE_OTHER_MESSAGE;
+		}
+	}
 }
