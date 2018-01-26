@@ -14,18 +14,18 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 
 public class MessageViewHolder extends RecyclerView.ViewHolder {
-	public TextView mNameTextView;
-	public TextView mMessageTextView;
-	public ImageView mImageMessageImageView;
-	public CircleImageView mProfileImageView;
-	public TextView mTimeStampTextView;
+    public TextView mNameTextView;
+    public TextView mMessageTextView;
+    public ImageView mImageMessageImageView;
+    public CircleImageView mProfileImageView;
+    public TextView mTimeStampTextView;
 
-	public MessageViewHolder(View view) {
-		super(view);
-		mNameTextView = view.findViewById(R.id.tv_name);
-		mMessageTextView = view.findViewById(R.id.tv_message);
-		mImageMessageImageView = view.findViewById(R.id.iv_message);
-		mProfileImageView = view.findViewById(R.id.iv_profile);
-		mTimeStampTextView = view.findViewById(R.id.tv_time_stamp);
-	}
+    public MessageViewHolder(View view) {
+        super(view);
+        mNameTextView = view.findViewById(R.id.tv_name);
+        mMessageTextView = view.findViewById(R.id.tv_message);
+        mImageMessageImageView = view.findViewById(R.id.iv_message);
+        mProfileImageView = view.findViewById(R.id.iv_profile);
+        mTimeStampTextView = view.findViewById(R.id.tv_time_stamp);
+    }
 }

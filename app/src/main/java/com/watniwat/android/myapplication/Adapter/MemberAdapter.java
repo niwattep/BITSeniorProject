@@ -17,33 +17,33 @@ import java.util.List;
  * Created by Niwat on 23-Jan-18.
  */
 public class MemberAdapter extends RecyclerView.Adapter<MemberViewHolder> {
-	private Context context;
-	private List<Member> memberList;
+    private Context context;
+    private List<Member> memberList;
 
-	public MemberAdapter(Context context, List<Member> memberList) {
-		this.context = context;
-		this.memberList = memberList;
-	}
+    public MemberAdapter(Context context, List<Member> memberList) {
+        this.context = context;
+        this.memberList = memberList;
+    }
 
-	@Override
-	public MemberViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-		LayoutInflater inflater = LayoutInflater.from(context);
-		View view = inflater.inflate(R.layout.member_view, parent, false);
+    @Override
+    public MemberViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View view = inflater.inflate(R.layout.member_view, parent, false);
 
-		MemberViewHolder memberViewHolder = new MemberViewHolder(view);
+        MemberViewHolder memberViewHolder = new MemberViewHolder(view);
 
-		return memberViewHolder;
-	}
+        return memberViewHolder;
+    }
 
-	@Override
-	public void onBindViewHolder(MemberViewHolder holder, int position) {
-		Member member = memberList.get(position);
-		holder.mNameTextView.setText(member.getName());
-		Glide.with(holder.itemView.getContext()).load(member.getPhotoUrl()).into(holder.mProfileImageView);
-	}
+    @Override
+    public void onBindViewHolder(MemberViewHolder holder, int position) {
+        Member member = memberList.get(position);
+        holder.mNameTextView.setText(member.getName());
+        Glide.with(holder.itemView.getContext()).load(member.getPhotoUrl()).into(holder.mProfileImageView);
+    }
 
-	@Override
-	public int getItemCount() {
-		return memberList.size();
-	}
+    @Override
+    public int getItemCount() {
+        return memberList.size();
+    }
 }
