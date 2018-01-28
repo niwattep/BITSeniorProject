@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="start|bottom"
@@ -8,6 +9,7 @@
     android:padding="8dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
+        tools:src="@drawable/com_facebook_profile_picture_blank_square"
         android:id="@+id/iv_profile"
         android:layout_width="45dp"
         android:layout_height="45dp"
@@ -19,6 +21,7 @@
         android:orientation="vertical">
 
         <TextView
+            tools:text="Noe Armstrong"
             android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -32,11 +35,12 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             app:cmv_arrowGravity="end"
-            app:cmv_backgroundColor="#d6d6d6"
-            app:cmv_backgroundColorPressed="#ffffff"
+            app:cmv_backgroundColor="@color/colorPrimaryLight"
+            app:cmv_backgroundColorPressed="@color/colorPrimaryDark"
             app:cmv_cornerRadius="8dp">
 
             <TextView
+                tools:text="Hello Everyone!"
                 android:id="@+id/tv_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -51,6 +55,7 @@
         </me.himanshusoni.chatmessageview.ChatMessageView>
 
         <TextView
+            tools:text="15.00"
             android:id="@+id/tv_time_stamp"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
