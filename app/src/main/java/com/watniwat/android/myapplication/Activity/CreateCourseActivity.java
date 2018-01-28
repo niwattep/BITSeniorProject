@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -72,6 +73,9 @@ public class CreateCourseActivity extends AppCompatActivity {
     }
 
     private void setupView() {
+    	setSupportActionBar(mToolbar);
+    	getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         mCreateCourseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -155,14 +159,19 @@ public class CreateCourseActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (charSequence.length() < INPUT_DESC_MIN_LENGTH || charSequence.length() > INPUT_DESC_MAX_LENGTH) {
-                    mCourseIdInputTIL.setError("Course description must have no more than 120 characters");
-                    mCourseIdInputTIL.setHintTextAppearance(R.style.error_text_appearance);
+                if (!isValidDescLength(charSequence)) {
+                    mCourseDescriptionInputTIL.setError("Course description must have no more than 120 characters");
+					mCourseDescriptionInputTIL.setHintTextAppearance(R.style.error_text_appearance);
                     mCreateCourseButton.setEnabled(false);
                 } else {
-                    mCourseIdInputTIL.setError("");
-                    mCourseIdInputTIL.setHintTextAppearance(R.style.text_input_text_appearance);
-                    mCreateCourseButton.setEnabled(true);
+					mCourseDescriptionInputTIL.setError("");
+					mCourseDescriptionInputTIL.setHintTextAppearance(R.style.text_input_text_appearance);
+                    if (!isValidNameLength(mCourseNameEditText.getText()) || !isValidIdLength(mCourseIdEditText.getText())) {
+						mCreateCourseButton.setEnabled(false);
+					} else {
+						mCreateCourseButton.setEnabled(true);
+					}
+
                 }
             }
 
@@ -228,5 +237,19 @@ public class CreateCourseActivity extends AppCompatActivity {
 
 	private boolean isValidIdLength(CharSequence s) {
     	return s.length() >= INPUT_ID_MIN_LENGTH && s.length() <= INPUT_ID_MAX_LENGTH;
+	}
+
+	private boolean isValidDescLength(CharSequence s) {
+    	return s.length() <= INPUT_DESC_MAX_LENGTH;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+    	int id = item.getItemId();
+		if (id == android.R.id.home) {
+			finish();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 }
