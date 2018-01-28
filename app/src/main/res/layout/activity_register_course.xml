@@ -1,34 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.watniwat.android.myapplication.Activity.RegisterCourseActivity">
 
-    <TextView
-        android:id="@+id/tv_direction"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Enter course id"
-        android:textSize="18sp"
-        android:layout_marginTop="24dp"
-        android:layout_centerHorizontal="true"/>
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <EditText
-        android:id="@+id/edt_courseId"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            app:title="Register Course"
+            app:titleTextColor="@color/colorTexIcon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/til_courseId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="course id"
-        android:layout_marginTop="24dp"
-        android:layout_below="@+id/tv_direction"/>
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        app:counterEnabled="true"
+        app:counterOverflowTextAppearance="@style/error_text_appearance"
+        app:errorEnabled="true"
+        app:errorTextAppearance="@style/error_text_appearance"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
+
+        <EditText
+            android:id="@+id/edt_courseId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Course ID" />
+    </android.support.design.widget.TextInputLayout>
+
 
     <Button
         android:id="@+id/btn_register_course"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:padding="16dp"
         android:text="Register Course"
         android:textSize="24sp"
-        android:layout_alignParentBottom="true"/>
+        android:theme="@style/AppTheme.Button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/til_courseId" />
 
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

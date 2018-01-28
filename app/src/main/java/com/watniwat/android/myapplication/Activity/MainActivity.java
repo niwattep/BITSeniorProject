@@ -114,8 +114,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == RC_REGISTER_COURSE) {
             if (requestCode == RESULT_OK) {
-                Utilities.showToast("Course Registered", this);
-            } else Utilities.showToast("Cancel registering course", this);
+                Utilities.showToast("Course Registered!", this);
+            }
         }
 
     }

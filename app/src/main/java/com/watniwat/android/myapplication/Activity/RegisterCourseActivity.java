@@ -1,8 +1,14 @@
 package com.watniwat.android.myapplication.Activity;
 
 import android.content.Intent;
+import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,8 +25,12 @@ import com.watniwat.android.myapplication.Model.CourseItem;
 import com.watniwat.android.myapplication.R;
 
 public class RegisterCourseActivity extends AppCompatActivity {
+	private final int INPUT_MAX = 10;
+	private final int INPUT_MIN = 4;
 	private EditText mCourseIdInputEditText;
 	private Button mRegisterCourseButton;
+	private TextInputLayout mCourseIdInputTIL;
+	private Toolbar mToolbar;
 
 	private FirebaseUser user;
 
@@ -38,24 +48,63 @@ public class RegisterCourseActivity extends AppCompatActivity {
 		bindView();
 		setupFirebaseAuth();
 		setupFirebaseDatabase();
-		setupListener();
+		setupView();
 	}
 
 	private void bindView() {
 		mCourseIdInputEditText = findViewById(R.id.edt_courseId);
 		mRegisterCourseButton = findViewById(R.id.btn_register_course);
+		mCourseIdInputTIL = findViewById(R.id.til_courseId);
+		mToolbar = findViewById(R.id.toolbar);
+
 	}
 
-	private void setupListener() {
+	private void setupView() {
+		setSupportActionBar(mToolbar);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		mRegisterCourseButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				if (!mCourseIdInputEditText.getText().toString().isEmpty()) {
-					Toast.makeText(getApplicationContext(), "Hello", Toast.LENGTH_SHORT).show();
 					registerCourse(mCourseIdInputEditText.getText().toString());
 				}
 			}
 		});
+		mCourseIdInputTIL.setCounterMaxLength(INPUT_MAX);
+		mCourseIdInputEditText.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+				if (charSequence.length() < INPUT_MIN || charSequence.length() > INPUT_MAX) {
+					mCourseIdInputTIL.setError("Course ID must have between 4 and 10 characters ");
+					mCourseIdInputTIL.setHintTextAppearance(R.style.error_text_appearance);
+					mRegisterCourseButton.setEnabled(false);
+				} else {
+					mCourseIdInputTIL.setError("");
+					mCourseIdInputTIL.setHintTextAppearance(R.style.text_input_text_appearance);
+					mRegisterCourseButton.setEnabled(true);
+				}
+			}
+
+			@Override
+			public void afterTextChanged(Editable editable) {
+			}
+		});
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+
+		if (id == android.R.id.home) {
+			finish();
+			return true;
+		}
+
+		return super.onOptionsItemSelected(item);
 	}
 
 	private void setupFirebaseAuth() {
@@ -82,9 +131,14 @@ public class RegisterCourseActivity extends AppCompatActivity {
 				if (dataSnapshot.hasChild(courseId)) {
 					String courseUId = dataSnapshot.child(courseId).getValue(String.class);
 					getCourse(courseUId);
-					Toast.makeText(getApplicationContext(), "found", Toast.LENGTH_SHORT).show();
 				} else
-					Toast.makeText(getApplicationContext(), "not found", Toast.LENGTH_SHORT).show();
+					Snackbar.make(mRegisterCourseButton, "Course not found", Snackbar.LENGTH_SHORT)
+							.setAction("OK", new View.OnClickListener() {
+								@Override
+								public void onClick(View view) {
+
+								}
+							}).show();
 			}
 
 			@Override

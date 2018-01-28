@@ -27,7 +27,8 @@
         </activity>
         <activity android:name=".Activity.ChatActivity"
             android:windowSoftInputMode="adjustResize"/>
-        <activity android:name=".Activity.RegisterCourseActivity"></activity>
+        <activity android:name=".Activity.RegisterCourseActivity"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 

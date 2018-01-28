@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="end|bottom"
@@ -13,6 +14,7 @@
         android:orientation="vertical">
 
         <TextView
+            tools:text="Peter Pancake"
             android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -27,11 +29,12 @@
             android:layout_gravity="end"
             app:cmv_arrowGravity="end"
             app:cmv_arrowPosition="right"
-            app:cmv_backgroundColor="#bcf2ff"
-            app:cmv_backgroundColorPressed="#ffffff"
+            app:cmv_backgroundColor="@color/colorAccent"
+            app:cmv_backgroundColorPressed="@color/colorAccent"
             app:cmv_cornerRadius="8dp">
 
             <TextView
+                tools:text="Hi there!"
                 android:id="@+id/tv_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -46,6 +49,7 @@
         </me.himanshusoni.chatmessageview.ChatMessageView>
 
         <TextView
+            tools:text="16.00"
             android:id="@+id/tv_time_stamp"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -55,6 +59,7 @@
     </LinearLayout>
 
     <de.hdodenhof.circleimageview.CircleImageView
+        tools:src="@drawable/com_facebook_profile_picture_blank_square"
         android:id="@+id/iv_profile"
         android:layout_width="45dp"
         android:layout_height="45dp"
