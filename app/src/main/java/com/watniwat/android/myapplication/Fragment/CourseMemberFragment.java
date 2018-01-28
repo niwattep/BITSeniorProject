@@ -75,7 +75,7 @@ public class CourseMemberFragment extends Fragment {
         memberList = new ArrayList<>();
         mMemberAdapter = new MemberAdapter(this.getContext(), memberList);
         mMemberRecyclerView.setAdapter(mMemberAdapter);
-        mMemberRecyclerView.setLayoutManager(new GridLayoutManager(this.getContext(), GRID_COLUMN));
+        mMemberRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         DatabaseReference courseMembersRef = FirebaseDatabase.getInstance()
                 .getReference("course-users/" + courseUId);
