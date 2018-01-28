@@ -38,7 +38,6 @@ public class CourseDetailActivity extends AppCompatActivity {
         getIntentData();
         setupFirebaseDatabase();
         setupListener();
-        createTabs();
     }
 
     private void bindView() {
@@ -51,7 +50,7 @@ public class CourseDetailActivity extends AppCompatActivity {
 
     private void createTabs() {
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-        CourseMenuFragmentAdapter pagerAdapter = new CourseMenuFragmentAdapter(fragmentManager, courseUId);
+        CourseMenuFragmentAdapter pagerAdapter = new CourseMenuFragmentAdapter(fragmentManager, courseUId, course.getCourseName());
         mCourseDetailsViewPager.setAdapter(pagerAdapter);
         //mCourseDetailsTabLayout.setTabsFromPagerAdapter(pagerAdapter);
         mCourseDetailsTabLayout.setupWithViewPager(mCourseDetailsViewPager);
@@ -80,6 +79,7 @@ public class CourseDetailActivity extends AppCompatActivity {
         mCourseNameTextView.setText(course.getCourseName());
         mCourseMemberCountTextView.setText(String.valueOf(course.getMembersCount()));
         mCourseIdTextView.setText(course.getCourseId());
+        createTabs();
     }
 
     private ValueEventListener onLoadCourseData() {

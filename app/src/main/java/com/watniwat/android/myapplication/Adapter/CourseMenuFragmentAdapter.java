@@ -16,18 +16,20 @@ public class CourseMenuFragmentAdapter extends FragmentStatePagerAdapter {
     private String[] tabNames = {"Menu", "Members"};
 
     private String courseUId;
+    private String courseName;
 
-    public CourseMenuFragmentAdapter(FragmentManager fm, String courseUId) {
+    public CourseMenuFragmentAdapter(FragmentManager fm, String courseUId, String courseName) {
         super(fm);
         this.courseUId = courseUId;
+        this.courseName = courseName;
     }
 
     @Override
     public Fragment getItem(int position) {
         switch (position) {
-            case 0: return CourseMenuFragment.newInstance(courseUId);
+            case 0: return CourseMenuFragment.newInstance(courseUId, courseName);
             case 1: return CourseMemberFragment.newInstance(courseUId);
-            default: return CourseMenuFragment.newInstance(courseUId);
+            default: return CourseMenuFragment.newInstance(courseUId, courseName);
         }
     }
 

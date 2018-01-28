@@ -5,9 +5,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -27,8 +30,10 @@ public class ChatActivity extends AppCompatActivity {
     private RecyclerView mChatRecyclerView;
     private EditText mMessageEditText;
     private Button mSendButton;
+    private Toolbar mToolbar;
 
     private String courseUId;
+    private String courseName;
     private ArrayList<Message> messageList;
 
     private FirebaseDatabase mFirebaseDatabase;
@@ -44,9 +49,9 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        bindView();
-        setupListener();
         getIntentData();
+        bindView();
+        setupView();
         setupFirebaseAuth();
         setupFirebaseDatabase();
 
@@ -57,9 +62,14 @@ public class ChatActivity extends AppCompatActivity {
         mChatRecyclerView = findViewById(R.id.rv_chat);
         mMessageEditText = findViewById(R.id.edt_message);
         mSendButton = findViewById(R.id.btn_send_message);
+        mToolbar = findViewById(R.id.toolbar);
     }
 
-    private void setupListener() {
+    private void setupView() {
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setTitle(courseName);
         mSendButton.setOnClickListener(onSendButtonClick());
         mMessageEditText.setOnFocusChangeListener(onMessageEditTextFocus());
     }
@@ -82,8 +92,9 @@ public class ChatActivity extends AppCompatActivity {
 
     private void getIntentData() {
         Intent intent = getIntent();
-        if (intent.hasExtra(CourseMenuFragment.EXTRA_COURSE_UID)) {
+        if (intent.hasExtra(CourseMenuFragment.EXTRA_COURSE_UID) && intent.hasExtra(CourseMenuFragment.EXTRA_COURSE_NAME)) {
             courseUId = intent.getStringExtra(CourseMenuFragment.EXTRA_COURSE_UID);
+            courseName = intent.getStringExtra(CourseMenuFragment.EXTRA_COURSE_NAME);
         }
     }
 
@@ -101,6 +112,18 @@ public class ChatActivity extends AppCompatActivity {
         linearLayoutManager.setStackFromEnd(true);
         linearLayoutManager.setReverseLayout(true);
         mChatRecyclerView.setLayoutManager(linearLayoutManager);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == android.R.id.home) {
+            finish();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private ChildEventListener onMessageEvent() {

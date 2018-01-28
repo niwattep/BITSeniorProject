@@ -19,18 +19,21 @@ import com.watniwat.android.myapplication.R;
  */
 public class CourseMenuFragment extends Fragment {
     public static final String ARG_PARAM_COURSE_UID = "courseUId";
+    public static final String ARG_PARAM_COURSE_NAME = "courseName";
     public static final String EXTRA_COURSE_UID = "courseUId";
+    public static final String EXTRA_COURSE_NAME = "courseName";
     private Button mChatButton;
     private String courseUId;
+    private String courseName;
 
     public CourseMenuFragment() {
-        // Required empty public constructor
     }
 
-    public static CourseMenuFragment newInstance(String courseUId) {
+    public static CourseMenuFragment newInstance(String courseUId, String courseName) {
         CourseMenuFragment courseMenuFragment = new CourseMenuFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM_COURSE_UID, courseUId);
+        args.putString(ARG_PARAM_COURSE_NAME, courseName);
         courseMenuFragment.setArguments(args);
         return courseMenuFragment;
     }
@@ -40,6 +43,7 @@ public class CourseMenuFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             courseUId = getArguments().getString(ARG_PARAM_COURSE_UID);
+            courseName = getArguments().getString(ARG_PARAM_COURSE_NAME);
         }
     }
 
@@ -69,6 +73,7 @@ public class CourseMenuFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), ChatActivity.class);
                 intent.putExtra(EXTRA_COURSE_UID, courseUId);
+                intent.putExtra(EXTRA_COURSE_NAME, courseName);
                 startActivity(intent);
             }
         };
