@@ -1,42 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:layout_gravity="">
-
-        <ImageView
-            android:id="@+id/img_course_image"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_marginRight="24dp"
-            android:layout_alignParentStart="true"/>
-        
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/tv_course_name"
-            android:textSize="16sp"
-            android:layout_toEndOf="@+id/img_course_image"
-            android:layout_alignParentTop="true"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/tv_course_id"
-            android:textSize="8sp"
-            android:layout_toEndOf="@+id/img_course_image"
-            android:layout_alignParentBottom="true"/>
-
-    </RelativeLayout>
+    android:orientation="vertical"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="12dp"
+    android:layout_marginLeft="12dp"
+    android:layout_marginRight="12dp"
+    app:cardBackgroundColor="@color/cardview_light_background"
+    app:cardElevation="3dp"
+    app:cardCornerRadius="2dp"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#eaeaea"/>
 
-</LinearLayout>
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity=""
+        android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/img_course_image"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/messenger_bubble_large_blue" />
+
+        <TextView
+            android:id="@+id/tv_course_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_toEndOf="@+id/img_course_image"
+            android:textSize="24sp"
+            app:layout_constraintStart_toEndOf="@+id/img_course_image"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="HelloWorldCourse" />
+
+        <TextView
+            android:id="@+id/tv_course_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_toEndOf="@+id/img_course_image"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tv_course_name"
+            app:layout_constraintTop_toBottomOf="@+id/tv_course_name"
+            tools:text="HelloWorldCourse101" />
+
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.v7.widget.CardView>
