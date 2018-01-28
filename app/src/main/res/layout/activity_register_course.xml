@@ -57,7 +57,7 @@
         android:layout_marginTop="8dp"
         android:padding="16dp"
         android:text="Register Course"
-        android:textSize="24sp"
+        android:textSize="20sp"
         android:theme="@style/AppTheme.Button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
