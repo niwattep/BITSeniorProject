@@ -10,9 +10,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="MyApplication"
-        android:textSize="36sp"
+        android:textSize="34sp"
         android:textAlignment="center"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"/>
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/btn_google_sign_in"
