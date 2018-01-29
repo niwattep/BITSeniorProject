@@ -20,6 +20,53 @@
         android:foreground="?android:attr/selectableItemBackground">
 
         <ImageView
+            android:id="@+id/iv_course_photo"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:adjustViewBounds="false"
+            android:cropToPadding="false"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/messenger_button_blue_bg_selector" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:alpha="0.4"
+            android:background="@color/colorPrimaryText"
+            app:layout_constraintBottom_toBottomOf="parent"></LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_course_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="56dp"
+            android:layout_marginStart="24dp"
+            android:layout_toEndOf="@+id/img_course_image"
+            android:textColor="@color/colorTexIcon"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="HelloWorldCourse" />
+
+        <TextView
+            android:id="@+id/tv_course_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="8dp"
+            android:layout_toEndOf="@+id/img_course_image"
+            android:textSize="16sp"
+            android:textColor="@color/colorTexIcon"
+            app:layout_constraintStart_toStartOf="@+id/tv_course_name"
+            app:layout_constraintTop_toBottomOf="@+id/tv_course_name"
+            tools:text="HelloWorldCourse101" />
+
+        <ImageView
             android:id="@+id/img_course_image"
             android:layout_width="45dp"
             android:layout_height="45dp"
@@ -30,53 +77,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             tools:src="@drawable/messenger_bubble_large_blue" />
 
-        <TextView
-            android:id="@+id/tv_course_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="16dp"
-            android:layout_toEndOf="@+id/img_course_image"
-            android:textColor="@color/colorPrimaryText"
-            android:textSize="24sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/frameLayout"
-            tools:text="HelloWorldCourse" />
-
-        <TextView
-            android:id="@+id/tv_course_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_toEndOf="@+id/img_course_image"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/tv_course_name"
-            app:layout_constraintTop_toBottomOf="@+id/tv_course_name"
-            tools:text="HelloWorldCourse101" />
-
-        <FrameLayout
-            android:id="@+id/frameLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <ImageView
-                android:id="@+id/iv_course_photo"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:adjustViewBounds="false"
-                android:cropToPadding="false"
-                android:scaleType="centerCrop"
-                tools:layout_editor_absoluteX="8dp"
-                tools:layout_editor_absoluteY="8dp"
-                tools:src="@drawable/messenger_button_blue_bg_selector" />
-        </FrameLayout>
 
 
     </android.support.constraint.ConstraintLayout>
