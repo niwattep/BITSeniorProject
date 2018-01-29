@@ -4,36 +4,30 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:layout_marginTop="8dp"
-    android:layout_marginBottom="12dp"
-    android:layout_marginLeft="12dp"
-    android:layout_marginRight="12dp"
+    android:layout_marginBottom="8dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    app:cardPreventCornerOverlap="false"
     app:cardBackgroundColor="@color/cardview_light_background"
-    app:cardElevation="3dp"
+    app:cardElevation="2dp"
     app:cardCornerRadius="2dp"
     xmlns:tools="http://schemas.android.com/tools">
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#eaeaea"/>
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity=""
-        android:padding="8dp">
+        android:foreground="?android:attr/selectableItemBackground">
 
         <ImageView
             android:id="@+id/img_course_image"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             tools:src="@drawable/messenger_bubble_large_blue" />
 
         <TextView
@@ -41,13 +35,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="24dp"
             android:layout_marginTop="16dp"
             android:layout_toEndOf="@+id/img_course_image"
-            android:textSize="24sp"
             android:textColor="@color/colorPrimaryText"
-            app:layout_constraintStart_toEndOf="@+id/img_course_image"
-            app:layout_constraintTop_toTopOf="parent"
+            android:textSize="24sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/frameLayout"
             tools:text="HelloWorldCourse" />
 
         <TextView
@@ -63,6 +57,27 @@
             app:layout_constraintStart_toStartOf="@+id/tv_course_name"
             app:layout_constraintTop_toBottomOf="@+id/tv_course_name"
             tools:text="HelloWorldCourse101" />
+
+        <FrameLayout
+            android:id="@+id/frameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/iv_course_photo"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:adjustViewBounds="false"
+                android:cropToPadding="false"
+                android:scaleType="centerCrop"
+                tools:layout_editor_absoluteX="8dp"
+                tools:layout_editor_absoluteY="8dp"
+                tools:src="@drawable/messenger_button_blue_bg_selector" />
+        </FrameLayout>
+
 
     </android.support.constraint.ConstraintLayout>
 

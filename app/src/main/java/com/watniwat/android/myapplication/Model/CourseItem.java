@@ -11,15 +11,17 @@ public class CourseItem implements Serializable {
     private String courseId;
     private String courseName;
     private String courseDescription;
+    private String coursePhotoUrl;
     private int membersCount;
 
     public CourseItem() {}
 
-    public CourseItem(String courseUId, String courseName, String courseId, String courseDescription) {
+    public CourseItem(String courseUId, String courseName, String courseId, String courseDescription, String coursePhotoUrl) {
         this.courseUId = courseUId;
         this.courseName = courseName;
         this.courseId = courseId;
         this.courseDescription = courseDescription;
+        this.coursePhotoUrl = coursePhotoUrl;
         this.membersCount = 1;
     }
 
@@ -37,6 +39,10 @@ public class CourseItem implements Serializable {
 
     public String getCourseDescription() {
         return courseDescription;
+    }
+
+    public String getCoursePhotoUrl() {
+        return coursePhotoUrl;
     }
 
     public int getMembersCount() {

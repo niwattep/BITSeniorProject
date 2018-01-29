@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         bindView();
-        setListener();
+        setupView();
         setupGoogleSignIn();
         setupFirebaseAuth();
         setupFirebaseDatabase();
@@ -70,11 +70,26 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
     }
 
-    private void setListener() {
+    private void setupView() {
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivityForResult(new Intent(getApplicationContext(), RegisterCourseActivity.class), RC_REGISTER_COURSE);
+            }
+        });
+
+        mCourseRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy < 0 && !mFab.isShown())
+                    mFab.show();
+                else if(dy > 0 && mFab.isShown())
+                    mFab.hide();
             }
         });
     }

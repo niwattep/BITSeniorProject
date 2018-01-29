@@ -25,6 +25,9 @@ allprojects {
             url "https://maven.google.com" // Google's Maven repository
             url 'http://dl.bintray.com/amulyakhare/maven'
         }
+        maven {
+            url 'https://dl.bintray.com/siclo/SicloAndroidOSS'
+        }
 
     }
 }

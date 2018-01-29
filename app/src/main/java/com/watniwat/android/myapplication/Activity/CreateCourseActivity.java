@@ -1,6 +1,9 @@
 package com.watniwat.android.myapplication.Activity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -12,8 +15,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -21,8 +27,19 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.watniwat.android.myapplication.Model.CourseItem;
 import com.watniwat.android.myapplication.R;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
+import siclo.com.ezphotopicker.api.EZPhotoPick;
+import siclo.com.ezphotopicker.api.EZPhotoPickStorage;
+import siclo.com.ezphotopicker.api.models.EZPhotoPickConfig;
+import siclo.com.ezphotopicker.api.models.PhotoSource;
 
 public class CreateCourseActivity extends AppCompatActivity {
     public static final String EXTRA_COURSE_NAME = "name";
@@ -40,6 +57,7 @@ public class CreateCourseActivity extends AppCompatActivity {
     private TextInputLayout mCourseIdInputTIL;
     private TextInputLayout mCourseNameInputTIL;
     private TextInputLayout mCourseDescriptionInputTIL;
+    private ImageView mCoursePhotoImageView;
     private Toolbar mToolbar;
 
     private FirebaseUser user;
@@ -50,6 +68,10 @@ public class CreateCourseActivity extends AppCompatActivity {
     private DatabaseReference mCourseUsersRef;
     private DatabaseReference mUsersRef;
 
+	private StorageReference mStorageRef;
+
+	private Bitmap pickedPhoto = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +81,7 @@ public class CreateCourseActivity extends AppCompatActivity {
         setupView();
         setupDatabase();
         setupUser();
+        setupStorage();
     }
 
     private void bindView() {
@@ -70,11 +93,19 @@ public class CreateCourseActivity extends AppCompatActivity {
         mCourseNameInputTIL = findViewById(R.id.til_course_name);
         mCourseDescriptionInputTIL = findViewById(R.id.til_course_description);
         mCourseIdInputTIL = findViewById(R.id.til_course_id);
+        mCoursePhotoImageView = findViewById(R.id.iv_course_photo);
     }
 
     private void setupView() {
     	setSupportActionBar(mToolbar);
     	getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		mCoursePhotoImageView.setDrawingCacheEnabled(true);
+    	mCoursePhotoImageView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				chooseImage();
+			}
+		});
 
         mCreateCourseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -190,6 +221,10 @@ public class CreateCourseActivity extends AppCompatActivity {
         mUsersRef = firebaseDatabase.getReference("users");
     }
 
+    private void setupStorage() {
+    	mStorageRef = FirebaseStorage.getInstance().getReference();
+	}
+
     private void setupUser() {
         user = FirebaseAuth.getInstance().getCurrentUser();
     }
@@ -199,19 +234,23 @@ public class CreateCourseActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (!dataSnapshot.hasChild(courseId)) {
-                    Intent intent = getIntent();
 
-                    String courseUId = mCoursesRef.push().getKey();
-                    CourseItem course = new CourseItem(courseUId, courseName, courseId, courseDescription);
+                    final String courseUId = mCoursesRef.push().getKey();
 
-                    mCoursesRef.child(courseUId).setValue(course);
-                    mUserCoursesRef.child(user.getUid()).child(courseUId).setValue(course);
-                    mCourseIdRef.child(course.getCourseId()).setValue(courseUId);
-                    mCourseUsersRef.child(courseUId).child(user.getUid()).child("name").setValue(user.getDisplayName());
-                    mCourseUsersRef.child(courseUId).child(user.getUid()).child("photoUrl").setValue(user.getPhotoUrl().toString());
+					uploadFileAndCreateCourse(courseUId, new OnUploadPhotoSuccess() {
+						@Override
+						public void sendDataToDatabase(String photoUrl) {
+							CourseItem course = new CourseItem(courseUId, courseName, courseId, courseDescription, photoUrl);
+							mCoursesRef.child(courseUId).setValue(course);
+							mUserCoursesRef.child(user.getUid()).child(courseUId).setValue(course);
+							mCourseIdRef.child(course.getCourseId()).setValue(courseUId);
+							mCourseUsersRef.child(courseUId).child(user.getUid()).child("name").setValue(user.getDisplayName());
+							mCourseUsersRef.child(courseUId).child(user.getUid()).child("photoUrl").setValue(user.getPhotoUrl().toString());
 
-                    setResult(RESULT_OK, intent);
-                    finish();
+							setResult(RESULT_OK, getIntent());
+							finish();
+						}
+					});
                 } else {
 					Snackbar.make(mCreateCourseButton, "This course id is already existed.", Snackbar.LENGTH_SHORT)
 							.setAction("OK", new View.OnClickListener() {
@@ -226,7 +265,6 @@ public class CreateCourseActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
     }
@@ -251,5 +289,56 @@ public class CreateCourseActivity extends AppCompatActivity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == EZPhotoPick.PHOTO_PICK_GALLERY_REQUEST_CODE &&
+				resultCode == RESULT_OK) {
+			try {
+				pickedPhoto = new EZPhotoPickStorage(this).loadLatestStoredPhotoBitmap();
+				mCoursePhotoImageView.setImageBitmap(pickedPhoto);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	private void chooseImage() {
+		EZPhotoPickConfig config = new EZPhotoPickConfig();
+		config.photoSource = PhotoSource.GALLERY;
+		EZPhotoPick.startPhotoPickActivity(this, config);
+	}
+
+	private void uploadFileAndCreateCourse(String courseUId, final OnUploadPhotoSuccess callback) {
+		StorageReference photoReference = mStorageRef.child(courseUId + ".jpg");
+		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+		pickedPhoto.compress(Bitmap.CompressFormat.JPEG, 70, byteArrayOutputStream);
+
+		byte[] data = byteArrayOutputStream.toByteArray();
+		UploadTask uploadTask = photoReference.putBytes(data);
+		uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+			@Override
+			public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+				callback.sendDataToDatabase(taskSnapshot.getDownloadUrl().toString());
+			}
+		}).addOnFailureListener(new OnFailureListener() {
+			@Override
+			public void onFailure(@NonNull Exception exception) {
+				Snackbar.make(mCreateCourseButton, "Cannot upload file. Check your Internet connection.", Snackbar.LENGTH_SHORT)
+						.setAction("OK", new View.OnClickListener() {
+							@Override
+							public void onClick(View view) {
+
+							}
+						}).show();
+			}
+		});
+	}
+
+	interface OnUploadPhotoSuccess {
+		void sendDataToDatabase(String photoUrl);
 	}
 }

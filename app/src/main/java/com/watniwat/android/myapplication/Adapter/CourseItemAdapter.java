@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
+import com.bumptech.glide.Glide;
 import com.watniwat.android.myapplication.ViewHolder.CourseItemViewHolder;
 import com.watniwat.android.myapplication.Model.CourseItem;
 import com.watniwat.android.myapplication.R;
@@ -75,6 +76,7 @@ public class CourseItemAdapter extends RecyclerView.Adapter<CourseItemViewHolder
         viewHolder.courseImageView.setImageDrawable(textDrawable);
         viewHolder.courseNameTextView.setText(item.getCourseName());
         viewHolder.courseIdTextView.setText(item.getCourseId());
+        Glide.with(context).load(item.getCoursePhotoUrl()).into(viewHolder.coursePhotoImageView);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
