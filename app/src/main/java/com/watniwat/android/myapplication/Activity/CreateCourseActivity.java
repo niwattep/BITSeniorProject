@@ -244,8 +244,7 @@ public class CreateCourseActivity extends AppCompatActivity {
 							mCoursesRef.child(courseUId).setValue(course);
 							mUserCoursesRef.child(user.getUid()).child(courseUId).setValue(course);
 							mCourseIdRef.child(course.getCourseId()).setValue(courseUId);
-							mCourseUsersRef.child(courseUId).child(user.getUid()).child("name").setValue(user.getDisplayName());
-							mCourseUsersRef.child(courseUId).child(user.getUid()).child("photoUrl").setValue(user.getPhotoUrl().toString());
+							mCourseUsersRef.child(courseUId).child(user.getUid()).setValue(true);
 
 							setResult(RESULT_OK, getIntent());
 							finish();
