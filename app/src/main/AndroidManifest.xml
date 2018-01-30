@@ -38,12 +38,10 @@
         <activity
             android:name=".Activity.RegisterCourseActivity"
             android:windowSoftInputMode="adjustResize" />
+
         <activity
-            android:name=".SignUpActivity"
-            android:label="@string/title_activity_sign_up" />
-        <activity
-            android:name=".SignUpWithEmailActivity"
-            android:label="@string/title_activity_sign_up_with_email"></activity>
+            android:name=".Activity.SignUpActivity"
+            android:theme="@style/Theme.AppCompat" />
     </application>
 
 </manifest>

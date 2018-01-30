@@ -32,6 +32,7 @@ import com.watniwat.android.myapplication.R;
 
 public class SignInActivity extends AppCompatActivity {
     private static final int RC_GOOGLE_SIGN_IN = 1234;
+    private static final int RC_EMAIL_SIGN_UP = 5678;
 
     private TextInputLayout mEmailTIL;
     private EditText mEmailEditText;
@@ -85,6 +86,11 @@ public class SignInActivity extends AppCompatActivity {
                 onLoginFailure();
             }
         }
+        if (requestCode == RC_EMAIL_SIGN_UP) {
+            if (resultCode == RESULT_CANCELED) {
+                Snackbar.make(mSignInButton, "Sign up fail", Snackbar.LENGTH_LONG).show();
+            }
+        }
     }
 
     private void bindView() {
@@ -104,6 +110,13 @@ public class SignInActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 signInWithEmail();
+            }
+        });
+
+        mSignUpClickableTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivityForResult(new Intent(getApplicationContext(), SignUpActivity.class), RC_EMAIL_SIGN_UP);
             }
         });
     }
