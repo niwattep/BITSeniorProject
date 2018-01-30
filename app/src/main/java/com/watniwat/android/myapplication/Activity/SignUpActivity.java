@@ -17,6 +17,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.watniwat.android.myapplication.R;
 
 public class SignUpActivity extends AppCompatActivity {
@@ -73,6 +75,8 @@ public class SignUpActivity extends AppCompatActivity {
 							UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
 									.setDisplayName(displayName).build();
 							user.updateProfile(profileUpdates);
+							DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users");
+							userRef.child(user.getUid()).child("displayName").setValue(displayName);
 							onLoginCompleted();
 						} else {
 							Log.d("MyLOG", "Signup fail" + task.getException().toString());
