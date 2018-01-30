@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -19,7 +20,6 @@ import com.watniwat.android.myapplication.R;
 public class CourseDetailActivity extends AppCompatActivity {
     private TextView mCourseNameTextView;
     private TextView mCourseIdTextView;
-    private TextView mCourseMemberCountTextView;
     private ViewPager mCourseDetailsViewPager;
     private TabLayout mCourseDetailsTabLayout;
 
@@ -42,7 +42,6 @@ public class CourseDetailActivity extends AppCompatActivity {
 
     private void bindView() {
         mCourseNameTextView = findViewById(R.id.tv_course_name);
-        mCourseMemberCountTextView = findViewById(R.id.tv_course_member_count);
         mCourseIdTextView = findViewById(R.id.tv_course_id);
         mCourseDetailsViewPager = findViewById(R.id.course_details_view_pager);
         mCourseDetailsTabLayout = findViewById(R.id.course_details_tab_layout);
@@ -77,7 +76,6 @@ public class CourseDetailActivity extends AppCompatActivity {
 
     private void setupViewData() {
         mCourseNameTextView.setText(course.getCourseName());
-        mCourseMemberCountTextView.setText(String.valueOf(course.getMembersCount()));
         mCourseIdTextView.setText(course.getCourseId());
         createTabs();
     }

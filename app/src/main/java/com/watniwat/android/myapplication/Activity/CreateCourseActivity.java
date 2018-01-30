@@ -309,13 +309,14 @@ public class CreateCourseActivity extends AppCompatActivity {
 	private void chooseImage() {
 		EZPhotoPickConfig config = new EZPhotoPickConfig();
 		config.photoSource = PhotoSource.GALLERY;
+		config.exportingSize = 800;
 		EZPhotoPick.startPhotoPickActivity(this, config);
 	}
 
 	private void uploadFileAndCreateCourse(String courseUId, final OnUploadPhotoSuccess callback) {
 		StorageReference photoReference = mStorageRef.child(courseUId + ".jpg");
 		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-		pickedPhoto.compress(Bitmap.CompressFormat.JPEG, 70, byteArrayOutputStream);
+		pickedPhoto.compress(Bitmap.CompressFormat.JPEG, 60, byteArrayOutputStream);
 
 		byte[] data = byteArrayOutputStream.toByteArray();
 		UploadTask uploadTask = photoReference.putBytes(data);
