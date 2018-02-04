@@ -59,8 +59,14 @@ public class MainActivity extends AppCompatActivity {
         setupFirebaseAuth();
         setupFirebaseDatabase();
 
-        loadCourses();
 
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        loadCourses();
     }
 
     private void bindView() {

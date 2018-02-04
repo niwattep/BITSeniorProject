@@ -12,7 +12,6 @@ public class CourseItem implements Serializable {
     private String courseName;
     private String courseDescription;
     private String coursePhotoUrl;
-    private int membersCount;
 
     public CourseItem() {}
 
@@ -22,7 +21,6 @@ public class CourseItem implements Serializable {
         this.courseId = courseId;
         this.courseDescription = courseDescription;
         this.coursePhotoUrl = coursePhotoUrl;
-        this.membersCount = 1;
     }
 
     public String getCourseName() {
@@ -43,10 +41,6 @@ public class CourseItem implements Serializable {
 
     public String getCoursePhotoUrl() {
         return coursePhotoUrl;
-    }
-
-    public int getMembersCount() {
-        return membersCount;
     }
 
     @Override

@@ -16,6 +16,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.watniwat.android.myapplication.Adapter.MemberAdapter;
 import com.watniwat.android.myapplication.Model.Member;
 import com.watniwat.android.myapplication.R;
@@ -82,9 +84,9 @@ public class CourseMemberFragment extends Fragment {
         courseMembersRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Member member = dataSnapshot.getValue(Member.class);
-                memberList.add(member);
-                mMemberAdapter.notifyDataSetChanged();
+                String memberUId = dataSnapshot.getKey();
+
+                getMember(memberUId);
             }
 
             @Override
@@ -100,6 +102,24 @@ public class CourseMemberFragment extends Fragment {
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void getMember(String memberUId) {
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("users");
+        Query query = dbRef.child(memberUId);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Member member = dataSnapshot.getValue(Member.class);
+                memberList.add(member);
+                mMemberAdapter.notifyDataSetChanged();
             }
 
             @Override

@@ -313,29 +313,35 @@ public class CreateCourseActivity extends AppCompatActivity {
 	}
 
 	private void uploadFileAndCreateCourse(String courseUId, final OnUploadPhotoSuccess callback) {
-		StorageReference photoReference = mStorageRef.child(courseUId + ".jpg");
-		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-		pickedPhoto.compress(Bitmap.CompressFormat.JPEG, 60, byteArrayOutputStream);
+    	if (pickedPhoto != null) {
+			StorageReference photoReference = mStorageRef.child(courseUId + ".jpg");
+			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+			pickedPhoto.compress(Bitmap.CompressFormat.JPEG, 60, byteArrayOutputStream);
 
-		byte[] data = byteArrayOutputStream.toByteArray();
-		UploadTask uploadTask = photoReference.putBytes(data);
-		uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-			@Override
-			public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-				callback.sendDataToDatabase(taskSnapshot.getDownloadUrl().toString());
-			}
-		}).addOnFailureListener(new OnFailureListener() {
-			@Override
-			public void onFailure(@NonNull Exception exception) {
-				Snackbar.make(mCreateCourseButton, "Cannot upload file. Check your Internet connection.", Snackbar.LENGTH_SHORT)
-						.setAction("OK", new View.OnClickListener() {
-							@Override
-							public void onClick(View view) {
+			byte[] data = byteArrayOutputStream.toByteArray();
+			UploadTask uploadTask = photoReference.putBytes(data);
+			uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+				@Override
+				public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+					callback.sendDataToDatabase(taskSnapshot.getDownloadUrl().toString());
+				}
+			}).addOnFailureListener(new OnFailureListener() {
+				@Override
+				public void onFailure(@NonNull Exception exception) {
+					Snackbar.make(mCreateCourseButton, "Cannot upload file. Check your Internet connection.", Snackbar.LENGTH_SHORT)
+							.setAction("OK", new View.OnClickListener() {
+								@Override
+								public void onClick(View view) {
 
-							}
-						}).show();
-			}
-		});
+								}
+							}).show();
+				}
+			});
+		} else callback.sendDataToDatabase(null);
+
+
+
+
 	}
 
 	interface OnUploadPhotoSuccess {

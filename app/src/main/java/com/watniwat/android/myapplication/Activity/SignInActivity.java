@@ -8,8 +8,10 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.gms.auth.api.Auth;
@@ -39,6 +41,7 @@ public class SignInActivity extends AppCompatActivity {
     private EditText mPasswordEditText;
     private Button mSignInButton;
     private TextView mSignUpClickableTextView;
+    private ProgressBar progressBar;
 
     private SignInButton mGoogleSignInButton;
     private GoogleApiClient mGoogleApiClient;
@@ -108,7 +111,12 @@ public class SignInActivity extends AppCompatActivity {
         mSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                signInWithEmail();
+                if (!mEmailEditText.getText().toString().isEmpty() && !mPasswordEditText.getText().toString().isEmpty()) {
+                    signInWithEmail();
+                } else {
+                    Snackbar.make(mSignInButton, "Please enter your email and password", Snackbar.LENGTH_SHORT).show();
+                }
+
             }
         });
 
@@ -159,6 +167,7 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     private void signInWithGoogle() {
+        showProgressBar();
         mGoogleSignInButton.setEnabled(false);
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_GOOGLE_SIGN_IN);
@@ -202,14 +211,21 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     private void onLoginCompleted() {
-        //hideLoading();
         startActivity(new Intent(this, MainActivity.class));
         finish();
     }
 
     private void onLoginFailure() {
         mGoogleSignInButton.setEnabled(true);
-        Snackbar.make(mSignInButton, "Sign In Fail. Please check you email and password again", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(mSignInButton, "Sign In Fail. Please check your email and password again", Snackbar.LENGTH_SHORT).show();
+    }
+
+    private void showProgressBar() {
+        progressBar = new ProgressBar(this,null,android.R.attr.progressBarStyleLarge);
+        progressBar.setIndeterminate(true);
+        progressBar.setVisibility(View.VISIBLE);
+        ViewGroup layout = (ViewGroup) findViewById(android.R.id.content).getRootView();
+        layout.addView(progressBar);
     }
 
 }
