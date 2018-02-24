@@ -41,12 +41,14 @@
 
     <ImageView
         android:id="@+id/img_course_image"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@drawable/messenger_bubble_large_blue" />
@@ -57,6 +59,7 @@
         android:layout_height="1dp"
         android:layout_marginEnd="8dp"
         android:background="@color/colorDivider"
+        android:alpha="0.5"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/tv_course_id" />

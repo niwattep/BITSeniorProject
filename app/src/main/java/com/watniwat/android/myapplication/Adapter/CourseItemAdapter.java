@@ -49,7 +49,7 @@ public class CourseItemAdapter extends RecyclerView.Adapter<CourseItemViewHolder
     @Override
     public CourseItemViewHolder onCreateViewHolder(ViewGroup vg, int type) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.courses_view_layout, vg, false);
+        View view = inflater.inflate(R.layout.view_course, vg, false);
 
         final CourseItemViewHolder viewHolder = new CourseItemViewHolder(view);
 

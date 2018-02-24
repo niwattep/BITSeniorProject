@@ -1,7 +1,6 @@
 package com.watniwat.android.myapplication.Adapter;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,11 +40,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
     public MessageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == Message.TYPE_MY_MESSAGE) {
             View view = LayoutInflater.from(context)
-                    .inflate(R.layout.my_message_view_layout, parent, false);
+                    .inflate(R.layout.view_my_message, parent, false);
             return new MessageViewHolder(view);
         } else {
             View view = LayoutInflater.from(context)
-                    .inflate(R.layout.other_message_view_layout, parent, false);
+                    .inflate(R.layout.view_other_message, parent, false);
             return new MessageViewHolder(view);
         }
     }
