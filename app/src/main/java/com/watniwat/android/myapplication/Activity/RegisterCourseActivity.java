@@ -21,6 +21,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.watniwat.android.myapplication.Model.CourseItem;
 import com.watniwat.android.myapplication.R;
 
@@ -143,7 +144,6 @@ public class RegisterCourseActivity extends AppCompatActivity {
 
 			@Override
 			public void onCancelled(DatabaseError databaseError) {
-
 			}
 		});
 	}
@@ -167,7 +167,8 @@ public class RegisterCourseActivity extends AppCompatActivity {
 	private void register(CourseItem courseItem) {
 		mUserCoursesRef.child(user.getUid()).child(courseItem.getCourseUId()).setValue(courseItem);
 		mCourseUsersRef.child(courseItem.getCourseUId()).child(user.getUid()).child("name").setValue(user.getDisplayName());
-		mCourseUsersRef.child(courseItem.getCourseUId()).child(user.getUid()).child("photoUrl").setValue(user.getPhotoUrl().toString());
+		mCourseUsersRef.child(courseItem.getCourseUId()).child(user.getUid()).setValue(true);
+		FirebaseMessaging.getInstance().subscribeToTopic(courseItem.getCourseUId());
 
 		Intent intent = getIntent();
 		setResult(RESULT_OK, intent);

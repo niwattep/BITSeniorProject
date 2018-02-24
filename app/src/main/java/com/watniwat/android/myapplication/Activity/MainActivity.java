@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int RC_CREATE_COURSE = 1234;
     private static final int RC_REGISTER_COURSE = 5678;
     public static final String EXTRA_COURSE_UID = "extra-course-uid";
+    public static final String EXTRA_COURSE_NAME = "extra-course-name";
     private Toolbar mToolbar;
     private FloatingActionButton mFab;
     private RecyclerView mCourseRecyclerView;
@@ -45,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
     private GoogleApiClient mGoogleApiClient;
     private FirebaseUser user;
 
-    private DatabaseReference mUserCoursesRef;
     private DatabaseReference mThisUserCoursesRef;
 
     @Override
@@ -58,15 +59,18 @@ public class MainActivity extends AppCompatActivity {
         setupGoogleSignIn();
         setupFirebaseAuth();
         setupFirebaseDatabase();
-
-
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         loadCourses();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        courseItems.clear();
     }
 
     private void bindView() {
@@ -119,8 +123,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupFirebaseDatabase() {
-        mUserCoursesRef = FirebaseDatabase.getInstance().getReference("user-courses");
-        mThisUserCoursesRef = mUserCoursesRef.child(user.getUid());
+        mThisUserCoursesRef = FirebaseDatabase.getInstance().getReference("user-courses").child(user.getUid());
     }
 
     @Override
@@ -138,7 +141,6 @@ public class MainActivity extends AppCompatActivity {
                 Utilities.showToast("Course Registered!", this);
             }
         }
-
     }
 
     @Override
@@ -219,10 +221,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(View view, int position) {
                 CourseItem course = courseItems.get(position);
-                String courseUId = course.getCourseUId();
-                Intent intent = new Intent(getApplicationContext(), CourseDetailActivity.class);
-                intent.putExtra(EXTRA_COURSE_UID, courseUId);
-                getApplicationContext().startActivity(intent);
+                Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
+                intent.putExtra(EXTRA_COURSE_UID, course.getCourseUId());
+                intent.putExtra(EXTRA_COURSE_NAME, course.getCourseName());
+                MainActivity.this.startActivity(intent);
             }
         };
     }

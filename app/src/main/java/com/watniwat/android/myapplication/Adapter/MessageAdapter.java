@@ -1,12 +1,16 @@
 package com.watniwat.android.myapplication.Adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.watniwat.android.myapplication.ViewHolder.MessageViewHolder;
 import com.watniwat.android.myapplication.Model.Message;
 import com.watniwat.android.myapplication.R;
@@ -49,9 +53,27 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
     @Override
     public void onBindViewHolder(MessageViewHolder holder, int position) {
         Message message = messageList.get(position);
-        holder.mMessageTextView.setText(message.getData());
+
+        Log.d("HELLO", message.getDataType() + ", data: " + message.getData());
+
+        if (message.getDataType().equals(Message.DATA_TYPE_IMAGE)) {
+            holder.mImageMessageImageView.setVisibility(View.VISIBLE);
+            Glide.with(holder.itemView.getContext())
+                    .load(message.getData())
+                    .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
+                    .into(holder.mImageMessageImageView);
+        }
+        if (message.getDataType().equals(Message.DATA_TYPE_TEXT)) {
+            Glide.with(holder.itemView.getContext()).clear(holder.mImageMessageImageView);
+            holder.mImageMessageImageView.setVisibility(View.GONE);
+            holder.mMessageTextView.setText(message.getData());
+        }
         holder.mNameTextView.setText(message.getUserName());
-        Glide.with(holder.itemView.getContext()).load(message.getPhotoUrl()).into(holder.mProfileImageView);
+
+        if (message.getPhotoUrl() == null) {
+            Glide.with(holder.itemView.getContext()).load(R.drawable.ic_002_boy_1).into(holder.mProfileImageView);
+        } else Glide.with(holder.itemView.getContext()).load(message.getPhotoUrl()).into(holder.mProfileImageView);
+
         Date dateTime = new Date(message.getTimeStamp());
         DateFormat formatter = new SimpleDateFormat("HH:mm");
         holder.mTimeStampTextView.setText(formatter.format(dateTime));

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.watniwat.android.myapplication.ViewHolder.CourseItemViewHolder;
 import com.watniwat.android.myapplication.Model.CourseItem;
 import com.watniwat.android.myapplication.R;
@@ -69,14 +70,21 @@ public class CourseItemAdapter extends RecyclerView.Adapter<CourseItemViewHolder
     @Override
     public void onBindViewHolder(CourseItemViewHolder viewHolder, int position) {
         CourseItem item = courseItemList.get(position);
-        String letter = String.valueOf(item.getCourseName().charAt(0));
-        ColorGenerator generator = ColorGenerator.MATERIAL;
-        TextDrawable textDrawable = TextDrawable.builder()
-                .buildRound(letter, generator.getRandomColor());
-        viewHolder.courseImageView.setImageDrawable(textDrawable);
         viewHolder.courseNameTextView.setText(item.getCourseName());
         viewHolder.courseIdTextView.setText(item.getCourseId());
-        Glide.with(context).load(item.getCoursePhotoUrl()).into(viewHolder.coursePhotoImageView);
+
+        if (item.getCoursePhotoUrl() != null) {
+            Glide.with(context)
+                    .load(item.getCoursePhotoUrl())
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(viewHolder.courseImageView);
+        } else {
+            String letter = String.valueOf(item.getCourseName().charAt(0));
+            ColorGenerator generator = ColorGenerator.MATERIAL;
+            TextDrawable textDrawable = TextDrawable.builder()
+                    .buildRound(letter, generator.getRandomColor());
+            viewHolder.courseImageView.setImageDrawable(textDrawable);
+        }
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {

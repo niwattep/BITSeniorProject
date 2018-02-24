@@ -16,9 +16,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.watniwat.android.myapplication.R;
 
 public class SignUpActivity extends AppCompatActivity {
@@ -87,6 +89,12 @@ public class SignUpActivity extends AppCompatActivity {
 	}
 
 	private void onLoginCompleted() {
+		FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+		String idToken = FirebaseInstanceId.getInstance().getToken();
+		DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("users");
+		dbRef.child(user.getUid()).child("fcmToken").setValue(idToken);
+
 		startActivity(new Intent(this, MainActivity.class));
 		finish();
 	}

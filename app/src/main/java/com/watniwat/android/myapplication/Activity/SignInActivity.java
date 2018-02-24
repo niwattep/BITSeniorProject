@@ -28,7 +28,12 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.watniwat.android.myapplication.R;
 
 public class SignInActivity extends AppCompatActivity {
@@ -211,6 +216,12 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     private void onLoginCompleted() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        String idToken = FirebaseInstanceId.getInstance().getToken();
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("users");
+        dbRef.child(user.getUid()).child("fcmToken").setValue(idToken);
+
         startActivity(new Intent(this, MainActivity.class));
         finish();
     }
@@ -221,7 +232,7 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     private void showProgressBar() {
-        progressBar = new ProgressBar(this,null,android.R.attr.progressBarStyleLarge);
+        progressBar = new ProgressBar(this,null,android.R.attr.progressBarStyle);
         progressBar.setIndeterminate(true);
         progressBar.setVisibility(View.VISIBLE);
         ViewGroup layout = (ViewGroup) findViewById(android.R.id.content).getRootView();

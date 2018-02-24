@@ -16,6 +16,7 @@ public class Message {
     public static final int TYPE_OTHER_MESSAGE = 2;
     public static final String DATA_TYPE_TEXT = "text";
     public static final String DATA_TYPE_IMAGE = "image";
+    public static final String DATA_TYPE_FILE = "file";
 
     private String userUId;
     private String userName;
@@ -43,7 +44,7 @@ public class Message {
         return userName;
     }
 
-    public String getType() {
+    public String getDataType() {
         return dataType;
     }
 

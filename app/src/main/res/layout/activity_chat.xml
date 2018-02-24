@@ -31,31 +31,66 @@
 
     </FrameLayout>
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="2dp">
 
+        <ImageView
+            android:id="@+id/btn_attach_file"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:alpha="0.6"
+            android:padding="8dp"
+            android:clickable="true"
+            android:src="@drawable/ic_attach_file_black_24px"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/btn_send_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:padding="8dp"
+            android:clickable="true"
+            android:src="@drawable/ic_photo_size_select_actual_black_24px"
+            app:layout_constraintStart_toEndOf="@+id/btn_attach_file"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <EditText
             android:id="@+id/edt_message"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="2dp"
-            android:layout_marginStart="2dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:layout_weight="1"
-            android:inputType="textMultiLine" />
+            android:inputType="textMultiLine"
+            android:maxHeight="100dp"
+            app:layout_constraintEnd_toStartOf="@+id/btn_send_message"
+            app:layout_constraintStart_toEndOf="@+id/btn_send_image"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/btn_send_message"
-            android:layout_width="40dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginEnd="2dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/colorAccent"
+            android:drawableLeft="@drawable/ic_send_white_24px"
+            android:gravity="bottom"
             android:minWidth="0dp"
-            android:paddingEnd="2dp"
-            android:paddingStart="2dp"
-            android:text="Send"/>
-    </LinearLayout>
+            android:paddingEnd="8dp"
+            android:paddingStart="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
 
 
 

@@ -27,6 +27,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -245,6 +246,7 @@ public class CreateCourseActivity extends AppCompatActivity {
 							mUserCoursesRef.child(user.getUid()).child(courseUId).setValue(course);
 							mCourseIdRef.child(course.getCourseId()).setValue(courseUId);
 							mCourseUsersRef.child(courseUId).child(user.getUid()).setValue(true);
+							FirebaseMessaging.getInstance().subscribeToTopic(courseUId);
 
 							setResult(RESULT_OK, getIntent());
 							finish();
@@ -338,10 +340,6 @@ public class CreateCourseActivity extends AppCompatActivity {
 				}
 			});
 		} else callback.sendDataToDatabase(null);
-
-
-
-
 	}
 
 	interface OnUploadPhotoSuccess {

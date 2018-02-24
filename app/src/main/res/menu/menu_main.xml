@@ -14,5 +14,6 @@
     <item
         android:id="@+id/menu_create_course"
         android:title="Create Course"
+        android:icon="@drawable/ic_add_white_24px"
         app:showAsAction="always" />
 </menu>
