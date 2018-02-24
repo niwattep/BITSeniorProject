@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -26,28 +25,28 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.watniwat.android.myapplication.Model.CourseItem;
-import com.watniwat.android.myapplication.Adapter.CourseItemAdapter;
+import com.watniwat.android.myapplication.Model.Room;
+import com.watniwat.android.myapplication.Adapter.RoomAdapter;
 import com.watniwat.android.myapplication.R;
 import com.watniwat.android.myapplication.Utilities;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    private static final int RC_CREATE_COURSE = 1234;
-    private static final int RC_REGISTER_COURSE = 5678;
-    public static final String EXTRA_COURSE_UID = "extra-course-uid";
-    public static final String EXTRA_COURSE_NAME = "extra-course-name";
+    private static final int RC_CREATE_ROOM = 1234;
+    private static final int RC_REGISTER_ROOM = 5678;
+    public static final String EXTRA_ROOM_UID = "extra-room-uid";
+    public static final String EXTRA_ROOM_NAME = "extra-room-name";
     private Toolbar mToolbar;
     private FloatingActionButton mFab;
-    private RecyclerView mCourseRecyclerView;
-    private CourseItemAdapter mCourseItemAdapter;
-    private ArrayList<CourseItem> courseItems;
+    private RecyclerView mRoomRecyclerView;
+    private RoomAdapter mRoomsAdapter;
+    private ArrayList<Room> rooms;
 
     private GoogleApiClient mGoogleApiClient;
     private FirebaseUser user;
 
-    private DatabaseReference mThisUserCoursesRef;
+    private DatabaseReference mThisUserRoomsRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,17 +63,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        loadCourses();
+        loadRooms();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        courseItems.clear();
+        rooms.clear();
     }
 
     private void bindView() {
-        mCourseRecyclerView = findViewById(R.id.course_recycler_view);
+        mRoomRecyclerView = findViewById(R.id.room_recycler_view);
         mToolbar = findViewById(R.id.toolbar);
         mFab = findViewById(R.id.fab);
         setSupportActionBar(mToolbar);
@@ -84,11 +83,11 @@ public class MainActivity extends AppCompatActivity {
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivityForResult(new Intent(getApplicationContext(), RegisterCourseActivity.class), RC_REGISTER_COURSE);
+                startActivityForResult(new Intent(getApplicationContext(), JoinRoomActivity.class), RC_REGISTER_ROOM);
             }
         });
 
-        mCourseRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        mRoomRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
@@ -123,22 +122,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupFirebaseDatabase() {
-        mThisUserCoursesRef = FirebaseDatabase.getInstance().getReference("user-courses").child(user.getUid());
+        mThisUserRoomsRef = FirebaseDatabase.getInstance().getReference("user-rooms").child(user.getUid());
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == RC_CREATE_COURSE) {
+        if (requestCode == RC_CREATE_ROOM) {
             if (resultCode == RESULT_OK) {
-                Utilities.showToast("Course created", this);
-            } else Utilities.showToast("Cancel creating course", this);
+                Utilities.showToast("Room created", this);
+            } else Utilities.showToast("Cancel creating room", this);
         }
 
-        if (requestCode == RC_REGISTER_COURSE) {
+        if (requestCode == RC_REGISTER_ROOM) {
             if (requestCode == RESULT_OK) {
-                Utilities.showToast("Course Registered!", this);
+                Utilities.showToast("Room Registered!", this);
             }
         }
     }
@@ -156,8 +155,8 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-        if (id == R.id.menu_create_course) {
-            startActivityForResult(new Intent(this, CreateCourseActivity.class), RC_CREATE_COURSE);
+        if (id == R.id.menu_create_room) {
+            startActivityForResult(new Intent(this, CreateRoomActivity.class), RC_CREATE_ROOM);
             return true;
         }
         if (id == R.id.menu_sign_out) {
@@ -168,45 +167,43 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void loadCourses() {
-        courseItems = new ArrayList<>();
-        setupCourseItemsRecyclerView();
-        mThisUserCoursesRef.addChildEventListener(onCourseItemsEventListener());
-        Log.d("ME", "Child event listener added. The size of courseItems is " + courseItems.size());
+    private void loadRooms() {
+        rooms = new ArrayList<>();
+        setupRoomsRecyclerView();
+        mThisUserRoomsRef.addChildEventListener(onRoomsEventListener());
+        Log.d("ME", "Child event listener added. The size of rooms is " + rooms.size());
     }
 
-    private void setupCourseItemsRecyclerView() {
-        mCourseItemAdapter = new CourseItemAdapter(this, courseItems);
-        mCourseItemAdapter.setOnItemClickListener(onCourseItemClick());
+    private void setupRoomsRecyclerView() {
+        mRoomsAdapter = new RoomAdapter(this, rooms);
+        mRoomsAdapter.setOnItemClickListener(onRoomClick());
 
-        mCourseRecyclerView.setAdapter(mCourseItemAdapter);
-        mCourseRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRoomRecyclerView.setAdapter(mRoomsAdapter);
+        mRoomRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    private ChildEventListener onCourseItemsEventListener() {
+    private ChildEventListener onRoomsEventListener() {
         return new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                CourseItem newCourse = dataSnapshot.getValue(CourseItem.class);
-                courseItems.add(newCourse);
-                mCourseItemAdapter.notifyDataSetChanged();
+                Room newRoom = dataSnapshot.getValue(Room.class);
+                rooms.add(newRoom);
+                mRoomsAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                CourseItem removedCourse = dataSnapshot.getValue(CourseItem.class);
-                courseItems.remove(removedCourse);
-                mCourseItemAdapter.notifyDataSetChanged();
+                Room removedRoom = dataSnapshot.getValue(Room.class);
+                rooms.remove(removedRoom);
+                mRoomsAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
             }
 
             @Override
@@ -216,14 +213,14 @@ public class MainActivity extends AppCompatActivity {
         };
     }
 
-    private CourseItemAdapter.OnItemClickListener onCourseItemClick() {
-        return new CourseItemAdapter.OnItemClickListener() {
+    private RoomAdapter.OnItemClickListener onRoomClick() {
+        return new RoomAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                CourseItem course = courseItems.get(position);
+                Room room = rooms.get(position);
                 Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
-                intent.putExtra(EXTRA_COURSE_UID, course.getCourseUId());
-                intent.putExtra(EXTRA_COURSE_NAME, course.getCourseName());
+                intent.putExtra(EXTRA_ROOM_UID, room.getRoomUId());
+                intent.putExtra(EXTRA_ROOM_NAME, room.getRoomName());
                 MainActivity.this.startActivity(intent);
             }
         };

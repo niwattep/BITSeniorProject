@@ -2,7 +2,6 @@ package com.watniwat.android.myapplication.Activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -16,7 +15,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -31,7 +29,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.watniwat.android.myapplication.Model.CourseItem;
+import com.watniwat.android.myapplication.Model.Room;
 import com.watniwat.android.myapplication.R;
 
 import java.io.ByteArrayOutputStream;
@@ -42,31 +40,29 @@ import siclo.com.ezphotopicker.api.EZPhotoPickStorage;
 import siclo.com.ezphotopicker.api.models.EZPhotoPickConfig;
 import siclo.com.ezphotopicker.api.models.PhotoSource;
 
-public class CreateCourseActivity extends AppCompatActivity {
-    public static final String EXTRA_COURSE_NAME = "name";
+public class CreateRoomActivity extends AppCompatActivity {
     public static final int INPUT_NAME_MAX_LENGTH = 25;
     public static final int INPUT_NAME_MIN_LENGTH = 4;
     public static final int INPUT_ID_MAX_LENGTH = 10;
     public static final int INPUT_ID_MIN_LENGTH = 4;
     public static final int INPUT_DESC_MAX_LENGTH = 120;
-    public static final int INPUT_DESC_MIN_LENGTH = 0;
 
-    private EditText mCourseNameEditText;
-    private EditText mCourseIdEditText;
-    private EditText mCourseDescriptionEditText;
-    private Button mCreateCourseButton;
-    private TextInputLayout mCourseIdInputTIL;
-    private TextInputLayout mCourseNameInputTIL;
-    private TextInputLayout mCourseDescriptionInputTIL;
-    private ImageView mCoursePhotoImageView;
+    private EditText mRoomNameEditText;
+    private EditText mRoomIdEditText;
+    private EditText mRoomDescriptionEditText;
+    private Button mCreateRoomButton;
+    private TextInputLayout mRoomIdInputTIL;
+    private TextInputLayout mRoomNameInputTIL;
+    private TextInputLayout mRoomDescriptionInputTIL;
+    private ImageView mRoomPhotoImageView;
     private Toolbar mToolbar;
 
     private FirebaseUser user;
     private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference mCoursesRef;
-    private DatabaseReference mCourseIdRef;
-    private DatabaseReference mUserCoursesRef;
-    private DatabaseReference mCourseUsersRef;
+    private DatabaseReference mRoomsRef;
+    private DatabaseReference mRoomIdRef;
+    private DatabaseReference mUserRoomsRef;
+    private DatabaseReference mRoomUsersRef;
     private DatabaseReference mUsersRef;
 
 	private StorageReference mStorageRef;
@@ -76,7 +72,7 @@ public class CreateCourseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_course);
+        setContentView(R.layout.activity_create_room);
 
         bindView();
         setupView();
@@ -86,38 +82,38 @@ public class CreateCourseActivity extends AppCompatActivity {
     }
 
     private void bindView() {
-        mCourseNameEditText = findViewById(R.id.edt_course_name);
-        mCourseIdEditText = findViewById(R.id.edt_course_id);
-        mCourseDescriptionEditText = findViewById(R.id.edt_course_description);
-        mCreateCourseButton = findViewById(R.id.btn_create_course);
+        mRoomNameEditText = findViewById(R.id.edt_room_name);
+        mRoomIdEditText = findViewById(R.id.edt_room_id);
+        mRoomDescriptionEditText = findViewById(R.id.edt_room_description);
+        mCreateRoomButton = findViewById(R.id.btn_create_room);
         mToolbar = findViewById(R.id.toolbar);
-        mCourseNameInputTIL = findViewById(R.id.til_course_name);
-        mCourseDescriptionInputTIL = findViewById(R.id.til_course_description);
-        mCourseIdInputTIL = findViewById(R.id.til_course_id);
-        mCoursePhotoImageView = findViewById(R.id.iv_course_photo);
+        mRoomNameInputTIL = findViewById(R.id.til_room_name);
+        mRoomDescriptionInputTIL = findViewById(R.id.til_room_description);
+        mRoomIdInputTIL = findViewById(R.id.til_room_id);
+        mRoomPhotoImageView = findViewById(R.id.iv_room_photo);
     }
 
     private void setupView() {
     	setSupportActionBar(mToolbar);
     	getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		mCoursePhotoImageView.setDrawingCacheEnabled(true);
-    	mCoursePhotoImageView.setOnClickListener(new View.OnClickListener() {
+		mRoomPhotoImageView.setDrawingCacheEnabled(true);
+    	mRoomPhotoImageView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				chooseImage();
 			}
 		});
 
-        mCreateCourseButton.setOnClickListener(new View.OnClickListener() {
+        mCreateRoomButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String courseName = mCourseNameEditText.getText().toString();
-                String courseId = mCourseIdEditText.getText().toString();
-                String courseDescription = mCourseDescriptionEditText.getText().toString();
-                if (!courseName.isEmpty() && !courseId.isEmpty()) {
-                    validateAndAddNewCourse(courseName, courseId, courseDescription);
+                String roomName = mRoomNameEditText.getText().toString();
+                String roomId = mRoomIdEditText.getText().toString();
+                String roomDescription = mRoomDescriptionEditText.getText().toString();
+                if (!roomName.isEmpty() && !roomId.isEmpty()) {
+                    validateAndAddNewRoom(roomName, roomId, roomDescription);
                 } else {
-					Snackbar.make(mCreateCourseButton, "Please enter course name and course id", Snackbar.LENGTH_SHORT)
+					Snackbar.make(mCreateRoomButton, "Please enter room name and room id", Snackbar.LENGTH_SHORT)
 							.setAction("OK", new View.OnClickListener() {
 								@Override
 								public void onClick(View view) {
@@ -127,8 +123,8 @@ public class CreateCourseActivity extends AppCompatActivity {
                 }
             }
         });
-        mCourseNameInputTIL.setCounterMaxLength(INPUT_NAME_MAX_LENGTH);
-        mCourseNameEditText.addTextChangedListener(new TextWatcher() {
+        mRoomNameInputTIL.setCounterMaxLength(INPUT_NAME_MAX_LENGTH);
+        mRoomNameEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
@@ -136,16 +132,16 @@ public class CreateCourseActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (!isValidNameLength(charSequence)) {
-                    mCourseNameInputTIL.setError("Course Name must have between 4 and 25 characters");
-                    mCourseNameInputTIL.setHintTextAppearance(R.style.error_text_appearance);
-                    mCreateCourseButton.setEnabled(false);
+                    mRoomNameInputTIL.setError("Room Name must have between 4 and 25 characters");
+                    mRoomNameInputTIL.setHintTextAppearance(R.style.error_text_appearance);
+                    mCreateRoomButton.setEnabled(false);
                 } else {
-                    mCourseNameInputTIL.setError("");
-                    mCourseNameInputTIL.setHintTextAppearance(R.style.text_input_text_appearance);
-                    if (!isValidIdLength(mCourseIdEditText.getText())) {
-						mCreateCourseButton.setEnabled(false);
+                    mRoomNameInputTIL.setError("");
+                    mRoomNameInputTIL.setHintTextAppearance(R.style.text_input_text_appearance);
+                    if (!isValidIdLength(mRoomIdEditText.getText())) {
+						mCreateRoomButton.setEnabled(false);
 					} else {
-                    	mCreateCourseButton.setEnabled(true);
+                    	mCreateRoomButton.setEnabled(true);
 					}
 
                 }
@@ -155,8 +151,8 @@ public class CreateCourseActivity extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {
             }
         });
-        mCourseIdInputTIL.setCounterMaxLength(INPUT_ID_MAX_LENGTH);
-        mCourseIdEditText.addTextChangedListener(new TextWatcher() {
+        mRoomIdInputTIL.setCounterMaxLength(INPUT_ID_MAX_LENGTH);
+        mRoomIdEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
@@ -164,16 +160,16 @@ public class CreateCourseActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (!isValidIdLength(charSequence)) {
-                    mCourseIdInputTIL.setError("Course ID must have between 4 and 10 characters");
-                    mCourseIdInputTIL.setHintTextAppearance(R.style.error_text_appearance);
-                    mCreateCourseButton.setEnabled(false);
+                    mRoomIdInputTIL.setError("Room ID must have between 4 and 10 characters");
+                    mRoomIdInputTIL.setHintTextAppearance(R.style.error_text_appearance);
+                    mCreateRoomButton.setEnabled(false);
                 } else {
-                    mCourseIdInputTIL.setError("");
-                    mCourseIdInputTIL.setHintTextAppearance(R.style.text_input_text_appearance);
-                    if (!isValidNameLength(mCourseNameEditText.getText())) {
-						mCreateCourseButton.setEnabled(false);
+                    mRoomIdInputTIL.setError("");
+                    mRoomIdInputTIL.setHintTextAppearance(R.style.text_input_text_appearance);
+                    if (!isValidNameLength(mRoomNameEditText.getText())) {
+						mCreateRoomButton.setEnabled(false);
 					} else {
-						mCreateCourseButton.setEnabled(true);
+						mCreateRoomButton.setEnabled(true);
 					}
 
                 }
@@ -183,8 +179,8 @@ public class CreateCourseActivity extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {
             }
         });
-        mCourseDescriptionInputTIL.setCounterMaxLength(INPUT_DESC_MAX_LENGTH);
-        mCourseDescriptionEditText.addTextChangedListener(new TextWatcher() {
+        mRoomDescriptionInputTIL.setCounterMaxLength(INPUT_DESC_MAX_LENGTH);
+        mRoomDescriptionEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
@@ -192,16 +188,16 @@ public class CreateCourseActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (!isValidDescLength(charSequence)) {
-                    mCourseDescriptionInputTIL.setError("Course description must have no more than 120 characters");
-					mCourseDescriptionInputTIL.setHintTextAppearance(R.style.error_text_appearance);
-                    mCreateCourseButton.setEnabled(false);
+                    mRoomDescriptionInputTIL.setError("Room description must have no more than 120 characters");
+					mRoomDescriptionInputTIL.setHintTextAppearance(R.style.error_text_appearance);
+                    mCreateRoomButton.setEnabled(false);
                 } else {
-					mCourseDescriptionInputTIL.setError("");
-					mCourseDescriptionInputTIL.setHintTextAppearance(R.style.text_input_text_appearance);
-                    if (!isValidNameLength(mCourseNameEditText.getText()) || !isValidIdLength(mCourseIdEditText.getText())) {
-						mCreateCourseButton.setEnabled(false);
+					mRoomDescriptionInputTIL.setError("");
+					mRoomDescriptionInputTIL.setHintTextAppearance(R.style.text_input_text_appearance);
+                    if (!isValidNameLength(mRoomNameEditText.getText()) || !isValidIdLength(mRoomIdEditText.getText())) {
+						mCreateRoomButton.setEnabled(false);
 					} else {
-						mCreateCourseButton.setEnabled(true);
+						mCreateRoomButton.setEnabled(true);
 					}
 
                 }
@@ -215,10 +211,10 @@ public class CreateCourseActivity extends AppCompatActivity {
 
     private void setupDatabase() {
         firebaseDatabase = FirebaseDatabase.getInstance();
-        mCoursesRef = firebaseDatabase.getReference("courses");
-        mCourseIdRef = firebaseDatabase.getReference("course-ids");
-        mUserCoursesRef = firebaseDatabase.getReference("user-courses");
-        mCourseUsersRef = firebaseDatabase.getReference("course-users");
+        mRoomsRef = firebaseDatabase.getReference("rooms");
+        mRoomIdRef = firebaseDatabase.getReference("room-ids");
+        mUserRoomsRef = firebaseDatabase.getReference("user-rooms");
+        mRoomUsersRef = firebaseDatabase.getReference("room-users");
         mUsersRef = firebaseDatabase.getReference("users");
     }
 
@@ -230,37 +226,37 @@ public class CreateCourseActivity extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
     }
 
-    private void validateAndAddNewCourse(final String courseName, final String courseId, final String courseDescription) {
-        mCourseIdRef.addListenerForSingleValueEvent(new ValueEventListener() {
+    private void validateAndAddNewRoom(final String roomName, final String roomId, final String roomDescription) {
+        mRoomIdRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.hasChild(courseId)) {
+                if (!dataSnapshot.hasChild(roomId)) {
 
-                    final String courseUId = mCoursesRef.push().getKey();
+                    final String roomUId = mRoomsRef.push().getKey();
 
-					uploadFileAndCreateCourse(courseUId, new OnUploadPhotoSuccess() {
+					uploadFileAndCreateRoom(roomUId, new OnUploadPhotoSuccess() {
 						@Override
 						public void sendDataToDatabase(String photoUrl) {
-							CourseItem course = new CourseItem(courseUId, courseName, courseId, courseDescription, photoUrl);
-							mCoursesRef.child(courseUId).setValue(course);
-							mUserCoursesRef.child(user.getUid()).child(courseUId).setValue(course);
-							mCourseIdRef.child(course.getCourseId()).setValue(courseUId);
-							mCourseUsersRef.child(courseUId).child(user.getUid()).setValue(true);
-							FirebaseMessaging.getInstance().subscribeToTopic(courseUId);
+							Room room = new Room(roomUId, roomName, roomId, roomDescription, photoUrl);
+							mRoomsRef.child(roomUId).setValue(room);
+							mUserRoomsRef.child(user.getUid()).child(roomUId).setValue(room);
+							mRoomIdRef.child(room.getRoomId()).setValue(roomUId);
+							mRoomUsersRef.child(roomUId).child(user.getUid()).setValue(true);
+							FirebaseMessaging.getInstance().subscribeToTopic(roomUId);
 
 							setResult(RESULT_OK, getIntent());
 							finish();
 						}
 					});
                 } else {
-					Snackbar.make(mCreateCourseButton, "This course id is already existed.", Snackbar.LENGTH_SHORT)
+					Snackbar.make(mCreateRoomButton, "This room id is already existed.", Snackbar.LENGTH_SHORT)
 							.setAction("OK", new View.OnClickListener() {
 								@Override
 								public void onClick(View view) {
 
 								}
 							}).show();
-                    mCourseIdEditText.setText("");
+                    mRoomIdEditText.setText("");
                 }
             }
 
@@ -298,7 +294,7 @@ public class CreateCourseActivity extends AppCompatActivity {
 				resultCode == RESULT_OK) {
 			try {
 				pickedPhoto = new EZPhotoPickStorage(this).loadLatestStoredPhotoBitmap();
-				mCoursePhotoImageView.setImageBitmap(pickedPhoto);
+				mRoomPhotoImageView.setImageBitmap(pickedPhoto);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -314,9 +310,9 @@ public class CreateCourseActivity extends AppCompatActivity {
 		EZPhotoPick.startPhotoPickActivity(this, config);
 	}
 
-	private void uploadFileAndCreateCourse(String courseUId, final OnUploadPhotoSuccess callback) {
+	private void uploadFileAndCreateRoom(String roomUId, final OnUploadPhotoSuccess callback) {
     	if (pickedPhoto != null) {
-			StorageReference photoReference = mStorageRef.child(courseUId + ".jpg");
+			StorageReference photoReference = mStorageRef.child(roomUId + ".jpg");
 			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 			pickedPhoto.compress(Bitmap.CompressFormat.JPEG, 60, byteArrayOutputStream);
 
@@ -330,7 +326,7 @@ public class CreateCourseActivity extends AppCompatActivity {
 			}).addOnFailureListener(new OnFailureListener() {
 				@Override
 				public void onFailure(@NonNull Exception exception) {
-					Snackbar.make(mCreateCourseButton, "Cannot upload file. Check your Internet connection.", Snackbar.LENGTH_SHORT)
+					Snackbar.make(mCreateRoomButton, "Cannot upload file. Check your Internet connection.", Snackbar.LENGTH_SHORT)
 							.setAction("OK", new View.OnClickListener() {
 								@Override
 								public void onClick(View view) {

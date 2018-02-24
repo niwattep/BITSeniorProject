@@ -7,14 +7,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.watniwat.android.myapplication.Adapter.CourseMenuFragmentAdapter;
-import com.watniwat.android.myapplication.Model.CourseItem;
+import com.watniwat.android.myapplication.Model.Room;
 import com.watniwat.android.myapplication.R;
 
 public class CourseDetailActivity extends AppCompatActivity {
@@ -23,7 +22,7 @@ public class CourseDetailActivity extends AppCompatActivity {
     private ViewPager mCourseDetailsViewPager;
     private TabLayout mCourseDetailsTabLayout;
 
-    private CourseItem course;
+    private Room course;
     private String courseUId;
 
     private FirebaseDatabase mFirebaseDatabase;
@@ -41,15 +40,15 @@ public class CourseDetailActivity extends AppCompatActivity {
     }
 
     private void bindView() {
-        mCourseNameTextView = findViewById(R.id.tv_course_name);
-        mCourseIdTextView = findViewById(R.id.tv_course_id);
+        mCourseNameTextView = findViewById(R.id.tv_room_name);
+        mCourseIdTextView = findViewById(R.id.tv_room_id);
         mCourseDetailsViewPager = findViewById(R.id.course_details_view_pager);
         mCourseDetailsTabLayout = findViewById(R.id.course_details_tab_layout);
     }
 
     private void createTabs() {
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-        CourseMenuFragmentAdapter pagerAdapter = new CourseMenuFragmentAdapter(fragmentManager, courseUId, course.getCourseName());
+        CourseMenuFragmentAdapter pagerAdapter = new CourseMenuFragmentAdapter(fragmentManager, courseUId, course.getRoomName());
         mCourseDetailsViewPager.setAdapter(pagerAdapter);
         //mCourseDetailsTabLayout.setTabsFromPagerAdapter(pagerAdapter);
         mCourseDetailsTabLayout.setupWithViewPager(mCourseDetailsViewPager);
@@ -57,8 +56,8 @@ public class CourseDetailActivity extends AppCompatActivity {
 
     private void getIntentData() {
         Intent intent = getIntent();
-        if (intent.hasExtra(MainActivity.EXTRA_COURSE_UID)) {
-            courseUId = intent.getStringExtra(MainActivity.EXTRA_COURSE_UID);
+        if (intent.hasExtra(MainActivity.EXTRA_ROOM_UID)) {
+            courseUId = intent.getStringExtra(MainActivity.EXTRA_ROOM_UID);
         }
 
     }
@@ -75,8 +74,8 @@ public class CourseDetailActivity extends AppCompatActivity {
     }
 
     private void setupViewData() {
-        mCourseNameTextView.setText(course.getCourseName());
-        mCourseIdTextView.setText(course.getCourseId());
+        mCourseNameTextView.setText(course.getRoomName());
+        mCourseIdTextView.setText(course.getRoomId());
         createTabs();
     }
 
@@ -84,7 +83,7 @@ public class CourseDetailActivity extends AppCompatActivity {
         return new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                course = dataSnapshot.getValue(CourseItem.class);
+                course = dataSnapshot.getValue(Room.class);
                 setupViewData();
             }
 

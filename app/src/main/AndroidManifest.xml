@@ -19,7 +19,7 @@
         <activity android:name=".Activity.MainActivity" />
         <activity android:name=".Activity.CourseDetailActivity" />
         <activity
-            android:name=".Activity.CreateCourseActivity"
+            android:name=".Activity.CreateRoomActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.SignInActivity"
@@ -37,7 +37,7 @@
             android:name=".Activity.ChatActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".Activity.RegisterCourseActivity"
+            android:name=".Activity.JoinRoomActivity"
             android:windowSoftInputMode="adjustResize" />
 
         <activity

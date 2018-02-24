@@ -26,13 +26,13 @@ import java.util.List;
 public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
     private Context context;
     private List<Message> messageList;
-    private String courseUId;
+    private String roomUId;
     private String uId;
 
-    public MessageAdapter(Context context, List<Message> messageList, String courseUId, String uId) {
+    public MessageAdapter(Context context, List<Message> messageList, String roomUId, String uId) {
         this.context = context;
         this.messageList = messageList;
-        this.courseUId = courseUId;
+        this.roomUId = roomUId;
         this.uId = uId;
     }
 

@@ -10,8 +10,8 @@ import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.watniwat.android.myapplication.ViewHolder.CourseItemViewHolder;
-import com.watniwat.android.myapplication.Model.CourseItem;
+import com.watniwat.android.myapplication.ViewHolder.RoomViewHolder;
+import com.watniwat.android.myapplication.Model.Room;
 import com.watniwat.android.myapplication.R;
 
 import java.util.List;
@@ -20,20 +20,19 @@ import java.util.List;
  * Created by Niwat on 26-Dec-17.
  */
 
-public class CourseItemAdapter extends RecyclerView.Adapter<CourseItemViewHolder> {
+public class RoomAdapter extends RecyclerView.Adapter<RoomViewHolder> {
     private Context context;
-    private List<CourseItem> courseItemList;
+    private List<Room> roomList;
     private OnItemClickListener mListener;
-    private final int COURSE_ITEM_KEY = 1;
 
-    public CourseItemAdapter(Context context, List<CourseItem> items) {
+    public RoomAdapter(Context context, List<Room> items) {
         this.context = context;
-        this.courseItemList = items;
+        this.roomList = items;
     }
 
     @Override
     public int getItemCount() {
-        return courseItemList.size();
+        return roomList.size();
     }
 
     @Override
@@ -47,11 +46,11 @@ public class CourseItemAdapter extends RecyclerView.Adapter<CourseItemViewHolder
     }
 
     @Override
-    public CourseItemViewHolder onCreateViewHolder(ViewGroup vg, int type) {
+    public RoomViewHolder onCreateViewHolder(ViewGroup vg, int type) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.view_course, vg, false);
+        View view = inflater.inflate(R.layout.view_room, vg, false);
 
-        final CourseItemViewHolder viewHolder = new CourseItemViewHolder(view);
+        final RoomViewHolder viewHolder = new RoomViewHolder(view);
 
         view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,22 +67,22 @@ public class CourseItemAdapter extends RecyclerView.Adapter<CourseItemViewHolder
     }
 
     @Override
-    public void onBindViewHolder(CourseItemViewHolder viewHolder, int position) {
-        CourseItem item = courseItemList.get(position);
-        viewHolder.courseNameTextView.setText(item.getCourseName());
-        viewHolder.courseIdTextView.setText(item.getCourseId());
+    public void onBindViewHolder(RoomViewHolder viewHolder, int position) {
+        Room item = roomList.get(position);
+        viewHolder.roomNameTextView.setText(item.getRoomName());
+        viewHolder.roomIdTextView.setText(item.getRoomId());
 
-        if (item.getCoursePhotoUrl() != null) {
+        if (item.getRoomPhotoUrl() != null) {
             Glide.with(context)
-                    .load(item.getCoursePhotoUrl())
+                    .load(item.getRoomPhotoUrl())
                     .apply(RequestOptions.circleCropTransform())
-                    .into(viewHolder.courseImageView);
+                    .into(viewHolder.roomImageView);
         } else {
-            String letter = String.valueOf(item.getCourseName().charAt(0));
+            String letter = String.valueOf(item.getRoomName().charAt(0));
             ColorGenerator generator = ColorGenerator.MATERIAL;
             TextDrawable textDrawable = TextDrawable.builder()
                     .buildRound(letter, generator.getRandomColor());
-            viewHolder.courseImageView.setImageDrawable(textDrawable);
+            viewHolder.roomImageView.setImageDrawable(textDrawable);
         }
     }
 

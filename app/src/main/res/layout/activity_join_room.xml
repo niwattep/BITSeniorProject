@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.watniwat.android.myapplication.Activity.RegisterCourseActivity">
+    tools:context="com.watniwat.android.myapplication.Activity.JoinRoomActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -13,7 +13,7 @@
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
-            app:title="Register Course"
+            app:title="Join Room"
             app:titleTextColor="@color/colorTexIcon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -22,7 +22,7 @@
     </android.support.design.widget.AppBarLayout>
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/til_courseId"
+        android:id="@+id/til_room_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -40,15 +40,15 @@
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
 
         <EditText
-            android:id="@+id/edt_courseId"
+            android:id="@+id/edt_room_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Course ID" />
+            android:hint="Room ID" />
     </android.support.design.widget.TextInputLayout>
 
 
     <Button
-        android:id="@+id/btn_register_course"
+        android:id="@+id/btn_join_room"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -56,12 +56,12 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:padding="16dp"
-        android:text="Register Course"
+        android:text="Join"
         android:textSize="20sp"
         android:theme="@style/AppTheme.Button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/til_courseId" />
+        app:layout_constraintTop_toBottomOf="@+id/til_room_id" />
 
 </android.support.constraint.ConstraintLayout>

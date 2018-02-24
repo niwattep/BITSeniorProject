@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -22,29 +21,29 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.watniwat.android.myapplication.Model.CourseItem;
+import com.watniwat.android.myapplication.Model.Room;
 import com.watniwat.android.myapplication.R;
 
-public class RegisterCourseActivity extends AppCompatActivity {
+public class JoinRoomActivity extends AppCompatActivity {
 	private final int INPUT_MAX = 10;
 	private final int INPUT_MIN = 4;
-	private EditText mCourseIdInputEditText;
-	private Button mRegisterCourseButton;
-	private TextInputLayout mCourseIdInputTIL;
+	private EditText mRoomIdInputEditText;
+	private Button mJoinRoomButton;
+	private TextInputLayout mRoomIdInputTIL;
 	private Toolbar mToolbar;
 
 	private FirebaseUser user;
 
 	private FirebaseDatabase mFirebaseDatabase;
-	private DatabaseReference mUserCoursesRef;
-	private DatabaseReference mCourseIdRef;
-	private DatabaseReference mCourseUsersRef;
-	private DatabaseReference mCoursesRef;
+	private DatabaseReference mUserRoomsRef;
+	private DatabaseReference mRoomIdRef;
+	private DatabaseReference mRoomUsersRef;
+	private DatabaseReference mRoomsRef;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_register_course);
+		setContentView(R.layout.activity_join_room);
 
 		bindView();
 		setupFirebaseAuth();
@@ -53,9 +52,9 @@ public class RegisterCourseActivity extends AppCompatActivity {
 	}
 
 	private void bindView() {
-		mCourseIdInputEditText = findViewById(R.id.edt_courseId);
-		mRegisterCourseButton = findViewById(R.id.btn_register_course);
-		mCourseIdInputTIL = findViewById(R.id.til_courseId);
+		mRoomIdInputEditText = findViewById(R.id.edt_room_id);
+		mJoinRoomButton = findViewById(R.id.btn_join_room);
+		mRoomIdInputTIL = findViewById(R.id.til_room_id);
 		mToolbar = findViewById(R.id.toolbar);
 
 	}
@@ -63,16 +62,16 @@ public class RegisterCourseActivity extends AppCompatActivity {
 	private void setupView() {
 		setSupportActionBar(mToolbar);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		mRegisterCourseButton.setOnClickListener(new View.OnClickListener() {
+		mJoinRoomButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				if (!mCourseIdInputEditText.getText().toString().isEmpty()) {
-					registerCourse(mCourseIdInputEditText.getText().toString());
+				if (!mRoomIdInputEditText.getText().toString().isEmpty()) {
+					joinRoom(mRoomIdInputEditText.getText().toString());
 				}
 			}
 		});
-		mCourseIdInputTIL.setCounterMaxLength(INPUT_MAX);
-		mCourseIdInputEditText.addTextChangedListener(new TextWatcher() {
+		mRoomIdInputTIL.setCounterMaxLength(INPUT_MAX);
+		mRoomIdInputEditText.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 			}
@@ -80,13 +79,13 @@ public class RegisterCourseActivity extends AppCompatActivity {
 			@Override
 			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 				if (charSequence.length() < INPUT_MIN || charSequence.length() > INPUT_MAX) {
-					mCourseIdInputTIL.setError("Course ID must have between 4 and 10 characters ");
-					mCourseIdInputTIL.setHintTextAppearance(R.style.error_text_appearance);
-					mRegisterCourseButton.setEnabled(false);
+					mRoomIdInputTIL.setError("Room ID must have between 4 and 10 characters ");
+					mRoomIdInputTIL.setHintTextAppearance(R.style.error_text_appearance);
+					mJoinRoomButton.setEnabled(false);
 				} else {
-					mCourseIdInputTIL.setError("");
-					mCourseIdInputTIL.setHintTextAppearance(R.style.text_input_text_appearance);
-					mRegisterCourseButton.setEnabled(true);
+					mRoomIdInputTIL.setError("");
+					mRoomIdInputTIL.setHintTextAppearance(R.style.text_input_text_appearance);
+					mJoinRoomButton.setEnabled(true);
 				}
 			}
 
@@ -119,21 +118,21 @@ public class RegisterCourseActivity extends AppCompatActivity {
 
 	private void setupFirebaseDatabase() {
 		mFirebaseDatabase = FirebaseDatabase.getInstance();
-		mUserCoursesRef = mFirebaseDatabase.getReference("user-courses");
-		mCourseIdRef = mFirebaseDatabase.getReference("course-ids");
-		mCourseUsersRef = mFirebaseDatabase.getReference("course-users");
-		mCoursesRef = mFirebaseDatabase.getReference("courses");
+		mUserRoomsRef = mFirebaseDatabase.getReference("user-rooms");
+		mRoomIdRef = mFirebaseDatabase.getReference("room-ids");
+		mRoomUsersRef = mFirebaseDatabase.getReference("room-users");
+		mRoomsRef = mFirebaseDatabase.getReference("rooms");
 	}
 
-	private void registerCourse(final String courseId) {
-		mCourseIdRef.addListenerForSingleValueEvent(new ValueEventListener() {
+	private void joinRoom(final String roomId) {
+		mRoomIdRef.addListenerForSingleValueEvent(new ValueEventListener() {
 			@Override
 			public void onDataChange(DataSnapshot dataSnapshot) {
-				if (dataSnapshot.hasChild(courseId)) {
-					String courseUId = dataSnapshot.child(courseId).getValue(String.class);
-					getCourse(courseUId);
+				if (dataSnapshot.hasChild(roomId)) {
+					String roomUId = dataSnapshot.child(roomId).getValue(String.class);
+					getRoom(roomUId);
 				} else
-					Snackbar.make(mRegisterCourseButton, "Course not found", Snackbar.LENGTH_SHORT)
+					Snackbar.make(mJoinRoomButton, "Room not found", Snackbar.LENGTH_SHORT)
 							.setAction("OK", new View.OnClickListener() {
 								@Override
 								public void onClick(View view) {
@@ -148,13 +147,13 @@ public class RegisterCourseActivity extends AppCompatActivity {
 		});
 	}
 
-	private void getCourse(final String courseUId) {
-		mCoursesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+	private void getRoom(final String roomUId) {
+		mRoomsRef.addListenerForSingleValueEvent(new ValueEventListener() {
 			@Override
 			public void onDataChange(DataSnapshot dataSnapshot) {
-				DataSnapshot child = dataSnapshot.child(courseUId);
-				CourseItem courseItem = child.getValue(CourseItem.class);
-				register(courseItem);
+				DataSnapshot child = dataSnapshot.child(roomUId);
+				Room room = child.getValue(Room.class);
+				join(room);
 			}
 
 			@Override
@@ -164,11 +163,11 @@ public class RegisterCourseActivity extends AppCompatActivity {
 		});
 	}
 
-	private void register(CourseItem courseItem) {
-		mUserCoursesRef.child(user.getUid()).child(courseItem.getCourseUId()).setValue(courseItem);
-		mCourseUsersRef.child(courseItem.getCourseUId()).child(user.getUid()).child("name").setValue(user.getDisplayName());
-		mCourseUsersRef.child(courseItem.getCourseUId()).child(user.getUid()).setValue(true);
-		FirebaseMessaging.getInstance().subscribeToTopic(courseItem.getCourseUId());
+	private void join(Room room) {
+		mUserRoomsRef.child(user.getUid()).child(room.getRoomUId()).setValue(room);
+		mRoomUsersRef.child(room.getRoomUId()).child(user.getUid()).child("name").setValue(user.getDisplayName());
+		mRoomUsersRef.child(room.getRoomUId()).child(user.getUid()).setValue(true);
+		FirebaseMessaging.getInstance().subscribeToTopic(room.getRoomUId());
 
 		Intent intent = getIntent();
 		setResult(RESULT_OK, intent);

@@ -3,7 +3,6 @@ package com.watniwat.android.myapplication.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,7 +29,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.watniwat.android.myapplication.Model.Message;
 import com.watniwat.android.myapplication.Adapter.MessageAdapter;
-import com.watniwat.android.myapplication.Fragment.CourseMenuFragment;
 import com.watniwat.android.myapplication.R;
 
 import java.io.ByteArrayOutputStream;
@@ -50,13 +48,13 @@ public class ChatActivity extends AppCompatActivity {
     private Button mSendButton;
     private Toolbar mToolbar;
 
-    private String courseUId;
-    private String courseName;
+    private String roomUId;
+    private String roomName;
     private ArrayList<Message> messageList;
 
     private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mCourseMessagesReference;
-    private DatabaseReference mThisCourseMessagesReference;
+    private DatabaseReference mRoomMessagesReference;
+    private DatabaseReference mThisRoomMessagesReference;
     private FirebaseUser user;
 
     private MessageAdapter mMessageAdapter;
@@ -91,7 +89,7 @@ public class ChatActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setTitle(courseName);
+        getSupportActionBar().setTitle(roomName);
         mSendButton.setOnClickListener(onSendButtonClick());
         mSendImageButton.setOnClickListener(onSendImageButtonClick());
         mAttachFileButton.setOnClickListener(onAttachFileButtonClick());
@@ -105,8 +103,8 @@ public class ChatActivity extends AppCompatActivity {
 
     private void setupFirebaseDatabase() {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mCourseMessagesReference = mFirebaseDatabase.getReference("course-messages");
-        mThisCourseMessagesReference = mCourseMessagesReference.child(courseUId);
+        mRoomMessagesReference = mFirebaseDatabase.getReference("room-messages");
+        mThisRoomMessagesReference = mRoomMessagesReference.child(roomUId);
     }
 
     private void setupStorage() {
@@ -115,20 +113,20 @@ public class ChatActivity extends AppCompatActivity {
 
     private void getIntentData() {
         Intent intent = getIntent();
-        if (intent.hasExtra(MainActivity.EXTRA_COURSE_UID) && intent.hasExtra(MainActivity.EXTRA_COURSE_NAME)) {
-            courseUId = intent.getStringExtra(MainActivity.EXTRA_COURSE_UID);
-            courseName = intent.getStringExtra(MainActivity.EXTRA_COURSE_NAME);
+        if (intent.hasExtra(MainActivity.EXTRA_ROOM_UID) && intent.hasExtra(MainActivity.EXTRA_ROOM_NAME)) {
+            roomUId = intent.getStringExtra(MainActivity.EXTRA_ROOM_UID);
+            roomName = intent.getStringExtra(MainActivity.EXTRA_ROOM_NAME);
         }
     }
 
     private void loadMessages() {
         messageList = new ArrayList<>();
         setupMessageRecyclerView();
-        mThisCourseMessagesReference.addChildEventListener(onMessageEvent());
+        mThisRoomMessagesReference.addChildEventListener(onMessageEvent());
     }
 
     private void setupMessageRecyclerView() {
-        mMessageAdapter = new MessageAdapter(this, messageList, courseUId, user.getUid());
+        mMessageAdapter = new MessageAdapter(this, messageList, roomUId, user.getUid());
 
         mChatRecyclerView.setAdapter(mMessageAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -226,7 +224,7 @@ public class ChatActivity extends AppCompatActivity {
         String text = mMessageEditText.getText().toString();
         if (!text.isEmpty()) {
             if (user != null) {
-                DatabaseReference databaseReference = mThisCourseMessagesReference.push();
+                DatabaseReference databaseReference = mThisRoomMessagesReference.push();
                 Message message = new Message(user.getUid(), user.getDisplayName(),
                         Message.DATA_TYPE_TEXT, text, user.getPhotoUrl() == null? null : user.getPhotoUrl().toString(),
                         System.currentTimeMillis());
@@ -240,7 +238,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private void sendImageMessage(Bitmap pickedPhoto) {
         if (pickedPhoto != null) {
-            final DatabaseReference databaseReference = mThisCourseMessagesReference.push();
+            final DatabaseReference databaseReference = mThisRoomMessagesReference.push();
             String fileName = databaseReference.getKey() + ".jpg";
 
             StorageReference photoReference = mStorageRef.child(fileName);

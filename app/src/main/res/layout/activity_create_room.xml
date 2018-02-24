@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.watniwat.android.myapplication.Activity.CreateCourseActivity">
+    tools:context="com.watniwat.android.myapplication.Activity.CreateRoomActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBarLayout2"
@@ -15,14 +15,14 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:title="Create New Course"
+            app:title="Create New Room"
             app:titleTextColor="@color/colorTexIcon">
 
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/til_course_name"
+        android:id="@+id/til_room_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -32,15 +32,15 @@
         app:counterOverflowTextAppearance="@style/error_text_appearance"
         app:errorEnabled="true"
         app:errorTextAppearance="@style/error_text_appearance"
-        app:layout_constraintEnd_toStartOf="@+id/iv_course_photo"
+        app:layout_constraintEnd_toStartOf="@+id/iv_room_photo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout2">
 
         <EditText
-            android:id="@+id/edt_course_name"
+            android:id="@+id/edt_room_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Course Name"
+            android:hint="Room Name"
             android:inputType="textPersonName"
             tools:layout_editor_absoluteX="8dp"
             tools:layout_editor_absoluteY="132dp" />
@@ -48,7 +48,7 @@
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/til_course_id"
+        android:id="@+id/til_room_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -59,18 +59,18 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/til_course_description"
+        app:layout_constraintTop_toBottomOf="@+id/til_room_description"
         app:counterEnabled="true"
         app:counterOverflowTextAppearance="@style/error_text_appearance"
         app:errorEnabled="true"
         app:errorTextAppearance="@style/error_text_appearance">
 
         <EditText
-            android:id="@+id/edt_course_id"
+            android:id="@+id/edt_room_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/edt_course_name"
-            android:hint="Course Id"
+            android:layout_below="@id/edt_room_name"
+            android:hint="Room Id"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -79,7 +79,7 @@
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/til_course_description"
+        android:id="@+id/til_room_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -88,17 +88,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/til_course_name"
+        app:layout_constraintTop_toBottomOf="@+id/til_room_name"
         app:counterEnabled="true"
         app:counterOverflowTextAppearance="@style/error_text_appearance"
         app:errorEnabled="true"
         app:errorTextAppearance="@style/error_text_appearance">
 
         <EditText
-            android:id="@+id/edt_course_description"
+            android:id="@+id/edt_room_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Course Description(Optional)"
+            android:hint="Room Description(Optional)"
             android:inputType="textMultiLine"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -108,14 +108,14 @@
     </android.support.design.widget.TextInputLayout>
 
     <Button
-        android:id="@+id/btn_create_course"
+        android:id="@+id/btn_create_room"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:padding="16dp"
-        android:text="Create Course"
+        android:text="Create Room"
         android:textSize="@dimen/text_size"
         android:theme="@style/AppTheme.Button"
         app:layout_constraintEnd_toEndOf="parent"
@@ -123,10 +123,10 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/til_course_id" />
+        app:layout_constraintTop_toBottomOf="@+id/til_room_id" />
 
     <ImageView
-        android:id="@+id/iv_course_photo"
+        android:id="@+id/iv_room_photo"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginEnd="8dp"
@@ -134,9 +134,9 @@
         android:padding="25dp"
         android:background="@color/colorPrimaryLight"
         android:scaleType="centerCrop"
-        app:layout_constraintBottom_toTopOf="@+id/til_course_name"
+        app:layout_constraintBottom_toTopOf="@+id/til_room_name"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/til_course_name"
+        app:layout_constraintTop_toBottomOf="@+id/til_room_name"
         app:srcCompat="@drawable/ic_photo_size_select_actual_white_24px" />
 
 

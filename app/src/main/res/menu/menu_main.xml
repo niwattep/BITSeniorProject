@@ -12,8 +12,8 @@
         android:title="Sign out"
         app:showAsAction="never" />
     <item
-        android:id="@+id/menu_create_course"
-        android:title="Create Course"
+        android:id="@+id/menu_create_room"
+        android:title="Create Room"
         android:icon="@drawable/ic_add_white_24px"
         app:showAsAction="always" />
 </menu>
