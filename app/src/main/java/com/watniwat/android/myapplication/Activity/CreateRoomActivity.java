@@ -40,7 +40,7 @@ import siclo.com.ezphotopicker.api.EZPhotoPickStorage;
 import siclo.com.ezphotopicker.api.models.EZPhotoPickConfig;
 import siclo.com.ezphotopicker.api.models.PhotoSource;
 
-public class CreateRoomActivity extends AppCompatActivity {
+public class CreateRoomActivity extends DialogActivity {
     public static final int INPUT_NAME_MAX_LENGTH = 25;
     public static final int INPUT_NAME_MIN_LENGTH = 4;
     public static final int INPUT_ID_MAX_LENGTH = 10;
@@ -227,7 +227,8 @@ public class CreateRoomActivity extends AppCompatActivity {
     }
 
     private void validateAndAddNewRoom(final String roomName, final String roomId, final String roomDescription) {
-        mRoomIdRef.addListenerForSingleValueEvent(new ValueEventListener() {
+    	showLoading();
+    	mRoomIdRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (!dataSnapshot.hasChild(roomId)) {
@@ -244,11 +245,14 @@ public class CreateRoomActivity extends AppCompatActivity {
 							mRoomUsersRef.child(roomUId).child(user.getUid()).setValue(true);
 							FirebaseMessaging.getInstance().subscribeToTopic(roomUId);
 
+							hideLoading();
+
 							setResult(RESULT_OK, getIntent());
 							finish();
 						}
 					});
                 } else {
+                	hideLoading();
 					Snackbar.make(mCreateRoomButton, "This room id is already existed.", Snackbar.LENGTH_SHORT)
 							.setAction("OK", new View.OnClickListener() {
 								@Override

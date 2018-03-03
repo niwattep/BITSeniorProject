@@ -56,7 +56,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
         Log.d("HELLO", message.getDataType() + ", data: " + message.getData());
 
         if (message.getDataType().equals(Message.DATA_TYPE_IMAGE)) {
+            holder.mMessageTextView.setVisibility(View.GONE);
             holder.mImageMessageImageView.setVisibility(View.VISIBLE);
+            holder.mImageMessageImageView.setClipToOutline(true);
             Glide.with(holder.itemView.getContext())
                     .load(message.getData())
                     .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))

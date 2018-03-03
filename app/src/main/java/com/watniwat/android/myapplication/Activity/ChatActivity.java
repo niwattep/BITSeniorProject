@@ -113,9 +113,9 @@ public class ChatActivity extends AppCompatActivity {
 
     private void getIntentData() {
         Intent intent = getIntent();
-        if (intent.hasExtra(MainActivity.EXTRA_ROOM_UID) && intent.hasExtra(MainActivity.EXTRA_ROOM_NAME)) {
-            roomUId = intent.getStringExtra(MainActivity.EXTRA_ROOM_UID);
-            roomName = intent.getStringExtra(MainActivity.EXTRA_ROOM_NAME);
+        if (intent.hasExtra(RoomListActivity.EXTRA_ROOM_UID) && intent.hasExtra(RoomListActivity.EXTRA_ROOM_NAME)) {
+            roomUId = intent.getStringExtra(RoomListActivity.EXTRA_ROOM_UID);
+            roomName = intent.getStringExtra(RoomListActivity.EXTRA_ROOM_NAME);
         }
     }
 

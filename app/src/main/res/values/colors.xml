@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#607D8B</color>
-    <color name="colorPrimaryDark">#455A64</color>
-    <color name="colorPrimaryLight">#CFD8DC</color>
+    <color name="colorPrimary">#FFC107</color>
+    <color name="colorPrimaryDark">#FFA000</color>
+    <color name="colorPrimaryLight">#FFECB3</color>
     <color name="colorAccent">#FFC107</color>
     <color name="colorPrimaryText">#212121</color>
     <color name="colorSecondaryText">#757575</color>
-    <color name="colorTexIcon">#FFFFFF</color>
+    <color name="colorTextIcon">#FFFFFF</color>
     <color name="colorDivider">#BDBDBD</color>
+
+    <color name="colorSecondary">#673AB7</color>
+    <color name="colorSecondaryDark">#512DA8</color>
+    <color name="colorSecondaryLight">#D1C4E9</color>
 
     <color name="colorErrorMessage">#D32F2F</color>
 </resources>

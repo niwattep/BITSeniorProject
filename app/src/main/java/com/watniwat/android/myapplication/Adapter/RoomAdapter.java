@@ -79,7 +79,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomViewHolder> {
                     .into(viewHolder.roomImageView);
         } else {
             String letter = String.valueOf(item.getRoomName().charAt(0));
-            ColorGenerator generator = ColorGenerator.MATERIAL;
+            ColorGenerator generator = ColorGenerator.DEFAULT;
             TextDrawable textDrawable = TextDrawable.builder()
                     .buildRound(letter, generator.getRandomColor());
             viewHolder.roomImageView.setImageDrawable(textDrawable);

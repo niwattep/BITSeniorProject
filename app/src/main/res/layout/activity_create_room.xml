@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:title="Create New Room"
-            app:titleTextColor="@color/colorTexIcon">
+            app:titleTextColor="@color/colorTextIcon">
 
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>

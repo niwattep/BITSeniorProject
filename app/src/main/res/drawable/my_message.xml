@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape android:shape="rectangle"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/colorAccent"/>
+    <corners android:bottomLeftRadius="@dimen/margin_padding_extra_large"
+        android:bottomRightRadius="@dimen/margin_padding_extra_large"
+        android:topLeftRadius="@dimen/margin_padding_extra_large"
+        android:topRightRadius="@dimen/margin_padding_small" />
+    <padding android:top="@dimen/margin_padding"
+        android:bottom="@dimen/margin_padding"
+        android:left="@dimen/margin_padding_large"
+        android:right="@dimen/margin_padding_large" />
+</shape>

@@ -8,6 +8,9 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+
+        <item name="colorControlNormal">@color/colorTextIcon</item>
+        <item name="android:windowBackground">@color/colorTextIcon</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -37,7 +40,7 @@
 
     <style name="AppTheme.Button" parent="Widget.AppCompat.Button.Borderless.Colored">
         <item name="colorButtonNormal">@color/colorAccent</item>
-        <item name="android:textColor">@color/colorTexIcon</item>
+        <item name="android:textColor">@color/colorTextIcon</item>
     </style>
 
 </resources>

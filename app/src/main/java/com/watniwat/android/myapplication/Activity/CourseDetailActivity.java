@@ -56,8 +56,8 @@ public class CourseDetailActivity extends AppCompatActivity {
 
     private void getIntentData() {
         Intent intent = getIntent();
-        if (intent.hasExtra(MainActivity.EXTRA_ROOM_UID)) {
-            courseUId = intent.getStringExtra(MainActivity.EXTRA_ROOM_UID);
+        if (intent.hasExtra(RoomListActivity.EXTRA_ROOM_UID)) {
+            courseUId = intent.getStringExtra(RoomListActivity.EXTRA_ROOM_UID);
         }
 
     }

@@ -25,6 +25,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.watniwat.android.myapplication.Model.Room;
 import com.watniwat.android.myapplication.Adapter.RoomAdapter;
 import com.watniwat.android.myapplication.R;
@@ -32,7 +33,7 @@ import com.watniwat.android.myapplication.Utilities;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class RoomListActivity extends AppCompatActivity {
     private static final int RC_CREATE_ROOM = 1234;
     private static final int RC_REGISTER_ROOM = 5678;
     public static final String EXTRA_ROOM_UID = "extra-room-uid";
@@ -47,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseUser user;
 
     private DatabaseReference mThisUserRoomsRef;
+
+    private ValueEventListener mRoomEventListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,7 +173,8 @@ public class MainActivity extends AppCompatActivity {
     private void loadRooms() {
         rooms = new ArrayList<>();
         setupRoomsRecyclerView();
-        mThisUserRoomsRef.addChildEventListener(onRoomsEventListener());
+        mRoomEventListener = roomEventListener();
+        mThisUserRoomsRef.addListenerForSingleValueEvent(mRoomEventListener);
         Log.d("ME", "Child event listener added. The size of rooms is " + rooms.size());
     }
 
@@ -180,6 +184,24 @@ public class MainActivity extends AppCompatActivity {
 
         mRoomRecyclerView.setAdapter(mRoomsAdapter);
         mRoomRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    private ValueEventListener roomEventListener() {
+        return new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    Room room = child.getValue(Room.class);
+                    rooms.add(room);
+                }
+                mRoomsAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
     }
 
     private ChildEventListener onRoomsEventListener() {
@@ -221,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
                 intent.putExtra(EXTRA_ROOM_UID, room.getRoomUId());
                 intent.putExtra(EXTRA_ROOM_NAME, room.getRoomName());
-                MainActivity.this.startActivity(intent);
+                RoomListActivity.this.startActivity(intent);
             }
         };
     }

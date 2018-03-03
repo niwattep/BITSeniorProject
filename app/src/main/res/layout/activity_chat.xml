@@ -12,8 +12,7 @@
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
-            app:titleTextColor="@color/colorTexIcon"
-            android:theme="@style/Base.ThemeOverlay.AppCompat.Dark"
+            app:titleTextColor="@color/colorTextIcon"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary" />
@@ -35,7 +34,8 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/colorDivider"/>
+        android:background="@color/colorDivider"
+        android:alpha="0.5"/>
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -60,10 +60,9 @@
             android:id="@+id/btn_send_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:padding="8dp"
             android:clickable="true"
+            android:padding="8dp"
             android:src="@drawable/ic_photo_size_select_actual_black_24px"
             app:layout_constraintStart_toEndOf="@+id/btn_attach_file"
             app:layout_constraintTop_toTopOf="parent" />
