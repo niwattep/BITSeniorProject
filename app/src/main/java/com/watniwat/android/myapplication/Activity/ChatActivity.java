@@ -27,6 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.watniwat.android.myapplication.Constant;
 import com.watniwat.android.myapplication.Model.Message;
 import com.watniwat.android.myapplication.Adapter.MessageAdapter;
 import com.watniwat.android.myapplication.R;
@@ -103,7 +104,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private void setupFirebaseDatabase() {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mRoomMessagesReference = mFirebaseDatabase.getReference("room-messages");
+        mRoomMessagesReference = mFirebaseDatabase.getReference(Constant.ROOM_MESSAGES);
         mThisRoomMessagesReference = mRoomMessagesReference.child(roomUId);
     }
 

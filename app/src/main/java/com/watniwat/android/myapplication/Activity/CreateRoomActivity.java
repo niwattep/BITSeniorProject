@@ -29,6 +29,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.watniwat.android.myapplication.Constant;
 import com.watniwat.android.myapplication.Model.Room;
 import com.watniwat.android.myapplication.R;
 
@@ -211,11 +212,11 @@ public class CreateRoomActivity extends DialogActivity {
 
     private void setupDatabase() {
         firebaseDatabase = FirebaseDatabase.getInstance();
-        mRoomsRef = firebaseDatabase.getReference("rooms");
-        mRoomIdRef = firebaseDatabase.getReference("room-ids");
-        mUserRoomsRef = firebaseDatabase.getReference("user-rooms");
-        mRoomUsersRef = firebaseDatabase.getReference("room-users");
-        mUsersRef = firebaseDatabase.getReference("users");
+        mRoomsRef = firebaseDatabase.getReference(Constant.ROOMS);
+        mRoomIdRef = firebaseDatabase.getReference(Constant.ROOM_IDS);
+        mUserRoomsRef = firebaseDatabase.getReference(Constant.USER_ROOMS);
+        mRoomUsersRef = firebaseDatabase.getReference(Constant.ROOM_USERS);
+        mUsersRef = firebaseDatabase.getReference(Constant.USERS);
     }
 
     private void setupStorage() {

@@ -21,6 +21,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.watniwat.android.myapplication.Constant;
 import com.watniwat.android.myapplication.Model.Room;
 import com.watniwat.android.myapplication.R;
 
@@ -118,10 +119,10 @@ public class JoinRoomActivity extends AppCompatActivity {
 
 	private void setupFirebaseDatabase() {
 		mFirebaseDatabase = FirebaseDatabase.getInstance();
-		mUserRoomsRef = mFirebaseDatabase.getReference("user-rooms");
-		mRoomIdRef = mFirebaseDatabase.getReference("room-ids");
-		mRoomUsersRef = mFirebaseDatabase.getReference("room-users");
-		mRoomsRef = mFirebaseDatabase.getReference("rooms");
+		mUserRoomsRef = mFirebaseDatabase.getReference(Constant.USER_ROOMS);
+		mRoomIdRef = mFirebaseDatabase.getReference(Constant.ROOM_IDS);
+		mRoomUsersRef = mFirebaseDatabase.getReference(Constant.ROOM_USERS);
+		mRoomsRef = mFirebaseDatabase.getReference(Constant.ROOMS);
 	}
 
 	private void joinRoom(final String roomId) {
@@ -165,7 +166,6 @@ public class JoinRoomActivity extends AppCompatActivity {
 
 	private void join(Room room) {
 		mUserRoomsRef.child(user.getUid()).child(room.getRoomUId()).setValue(room);
-		mRoomUsersRef.child(room.getRoomUId()).child(user.getUid()).child("name").setValue(user.getDisplayName());
 		mRoomUsersRef.child(room.getRoomUId()).child(user.getUid()).setValue(true);
 		FirebaseMessaging.getInstance().subscribeToTopic(room.getRoomUId());
 

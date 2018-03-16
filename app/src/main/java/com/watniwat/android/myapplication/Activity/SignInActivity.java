@@ -33,6 +33,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.watniwat.android.myapplication.Constant;
 import com.watniwat.android.myapplication.R;
 
 public class SignInActivity extends DialogActivity {
@@ -209,7 +210,7 @@ public class SignInActivity extends DialogActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         String idToken = FirebaseInstanceId.getInstance().getToken();
-        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("users");
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference(Constant.USERS);
         dbRef.child(user.getUid()).child("fcmToken").setValue(idToken);
 
         startActivity(new Intent(this, RoomListActivity.class));

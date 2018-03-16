@@ -19,6 +19,7 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.watniwat.android.myapplication.Constant;
 import com.watniwat.android.myapplication.R;
 
 public class SignUpActivity extends DialogActivity {
@@ -75,7 +76,7 @@ public class SignUpActivity extends DialogActivity {
 							UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
 									.setDisplayName(displayName).build();
 							user.updateProfile(profileUpdates);
-							DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users");
+							DatabaseReference userRef = FirebaseDatabase.getInstance().getReference(Constant.USERS);
 							userRef.child(user.getUid()).child("displayName").setValue(displayName);
 							onSignUpCompleted();
 						} else {

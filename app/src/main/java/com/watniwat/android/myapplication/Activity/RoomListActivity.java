@@ -26,6 +26,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.watniwat.android.myapplication.Constant;
 import com.watniwat.android.myapplication.Model.Room;
 import com.watniwat.android.myapplication.Adapter.RoomAdapter;
 import com.watniwat.android.myapplication.R;
@@ -125,7 +126,7 @@ public class RoomListActivity extends AppCompatActivity {
     }
 
     private void setupFirebaseDatabase() {
-        mThisUserRoomsRef = FirebaseDatabase.getInstance().getReference("user-rooms").child(user.getUid());
+        mThisUserRoomsRef = FirebaseDatabase.getInstance().getReference(Constant.USER_ROOMS).child(user.getUid());
     }
 
     @Override
