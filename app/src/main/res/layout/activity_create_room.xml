@@ -131,7 +131,6 @@
         android:layout_height="80dp"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
-        android:padding="25dp"
         android:background="@color/colorPrimaryLight"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toTopOf="@+id/til_room_name"

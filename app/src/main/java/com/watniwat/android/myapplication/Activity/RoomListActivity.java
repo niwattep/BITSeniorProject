@@ -4,6 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,7 +16,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -34,6 +40,8 @@ import com.watniwat.android.myapplication.Utilities;
 
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class RoomListActivity extends AppCompatActivity {
     private static final int RC_CREATE_ROOM = 1234;
     private static final int RC_REGISTER_ROOM = 5678;
@@ -42,6 +50,14 @@ public class RoomListActivity extends AppCompatActivity {
     private Toolbar mToolbar;
     private FloatingActionButton mFab;
     private RecyclerView mRoomRecyclerView;
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mActionBarDrawerToggle;
+    private NavigationView mNavigationView;
+    private View mDrawerHeader;
+    private CircleImageView mDrawerProfilePic;
+    private TextView mDrawerDisplayName;
+    private TextView mDrawerEmail;
+    private SwipeRefreshLayout mSwipeToRefresh;
     private RoomAdapter mRoomsAdapter;
     private ArrayList<Room> rooms;
 
@@ -55,18 +71,19 @@ public class RoomListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.nav_main);
 
         bindView();
         setupView();
         setupGoogleSignIn();
-        setupFirebaseAuth();
-        setupFirebaseDatabase();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        setupFirebaseAuth();
+        setupFirebaseDatabase();
+        setupDrawer();
         loadRooms();
     }
 
@@ -80,7 +97,18 @@ public class RoomListActivity extends AppCompatActivity {
         mRoomRecyclerView = findViewById(R.id.room_recycler_view);
         mToolbar = findViewById(R.id.toolbar);
         mFab = findViewById(R.id.fab);
+        mDrawerLayout = findViewById(R.id.nav_drawer);
+        mNavigationView = findViewById(R.id.nav_view);
+        mDrawerHeader = mNavigationView.getHeaderView(0);
+        mDrawerDisplayName = mDrawerHeader.findViewById(R.id.tv_drawer_name);
+        mDrawerEmail = mDrawerHeader.findViewById(R.id.tv_drawer_email);
+        mDrawerProfilePic = mDrawerHeader.findViewById(R.id.iv_drawer_profile);
+        mSwipeToRefresh = findViewById(R.id.swipe_to_refresh);
         setSupportActionBar(mToolbar);
+        mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, 0, 0);
+        mDrawerLayout.addDrawerListener(mActionBarDrawerToggle);
+        mActionBarDrawerToggle.syncState();
+
     }
 
     private void setupView() {
@@ -105,6 +133,13 @@ public class RoomListActivity extends AppCompatActivity {
                     mFab.hide();
             }
         });
+
+        mSwipeToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadRooms();
+            }
+        });
     }
 
     private void setupGoogleSignIn() {
@@ -127,6 +162,19 @@ public class RoomListActivity extends AppCompatActivity {
 
     private void setupFirebaseDatabase() {
         mThisUserRoomsRef = FirebaseDatabase.getInstance().getReference(Constant.USER_ROOMS).child(user.getUid());
+    }
+
+    private void setupDrawer() {
+        if (user.getDisplayName() != null) {
+            mDrawerDisplayName.setText(user.getDisplayName());
+        } else {
+            mDrawerDisplayName.setText(user.getEmail());
+        }
+
+        mDrawerEmail.setText(user.getEmail());
+        if (user.getPhotoUrl() == null) {
+            Glide.with(this).load(R.drawable.ic_002_boy_1).into(mDrawerProfilePic);
+        } else Glide.with(this).load(user.getPhotoUrl()).into(mDrawerProfilePic);
     }
 
     @Override
@@ -196,6 +244,9 @@ public class RoomListActivity extends AppCompatActivity {
                     rooms.add(room);
                 }
                 mRoomsAdapter.notifyDataSetChanged();
+                if (mSwipeToRefresh.isRefreshing()) {
+                    mSwipeToRefresh.setRefreshing(false);
+                }
             }
 
             @Override

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">fireBit</string>
     <string name="action_settings">Settings</string>
     <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
     <string name="facebook_application_id" translatable="false">1901039516880203</string>
@@ -22,5 +22,9 @@
         completions."
     </string>
     <string name="title_activity_sign_up_with_email">Sign up</string>
+    <string name="title_activity_main2">Main2Activity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
     <!--<string name="default_web_client_id"> 155905099753-co6ahs4qgktrkvfrk6qo54ts8jq26lne.apps.googleusercontent.com </string>-->
 </resources>

@@ -44,7 +44,7 @@ import siclo.com.ezphotopicker.api.models.PhotoSource;
 public class CreateRoomActivity extends DialogActivity {
     public static final int INPUT_NAME_MAX_LENGTH = 25;
     public static final int INPUT_NAME_MIN_LENGTH = 4;
-    public static final int INPUT_ID_MAX_LENGTH = 10;
+    public static final int INPUT_ID_MAX_LENGTH = 15;
     public static final int INPUT_ID_MIN_LENGTH = 4;
     public static final int INPUT_DESC_MAX_LENGTH = 120;
 
@@ -77,12 +77,17 @@ public class CreateRoomActivity extends DialogActivity {
 
         bindView();
         setupView();
-        setupDatabase();
-        setupUser();
-        setupStorage();
     }
 
-    private void bindView() {
+	@Override
+	protected void onStart() {
+		super.onStart();
+		setupDatabase();
+		setupUser();
+		setupStorage();
+	}
+
+	private void bindView() {
         mRoomNameEditText = findViewById(R.id.edt_room_name);
         mRoomIdEditText = findViewById(R.id.edt_room_id);
         mRoomDescriptionEditText = findViewById(R.id.edt_room_description);
@@ -124,90 +129,15 @@ public class CreateRoomActivity extends DialogActivity {
                 }
             }
         });
+
         mRoomNameInputTIL.setCounterMaxLength(INPUT_NAME_MAX_LENGTH);
-        mRoomNameEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
+        mRoomNameEditText.addTextChangedListener(new InputNameLisener());
 
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (!isValidNameLength(charSequence)) {
-                    mRoomNameInputTIL.setError("Room Name must have between 4 and 25 characters");
-                    mRoomNameInputTIL.setHintTextAppearance(R.style.error_text_appearance);
-                    mCreateRoomButton.setEnabled(false);
-                } else {
-                    mRoomNameInputTIL.setError("");
-                    mRoomNameInputTIL.setHintTextAppearance(R.style.text_input_text_appearance);
-                    if (!isValidIdLength(mRoomIdEditText.getText())) {
-						mCreateRoomButton.setEnabled(false);
-					} else {
-                    	mCreateRoomButton.setEnabled(true);
-					}
-
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-            }
-        });
         mRoomIdInputTIL.setCounterMaxLength(INPUT_ID_MAX_LENGTH);
-        mRoomIdEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
+        mRoomIdEditText.addTextChangedListener(new InputIdListener());
 
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (!isValidIdLength(charSequence)) {
-                    mRoomIdInputTIL.setError("Room ID must have between 4 and 10 characters");
-                    mRoomIdInputTIL.setHintTextAppearance(R.style.error_text_appearance);
-                    mCreateRoomButton.setEnabled(false);
-                } else {
-                    mRoomIdInputTIL.setError("");
-                    mRoomIdInputTIL.setHintTextAppearance(R.style.text_input_text_appearance);
-                    if (!isValidNameLength(mRoomNameEditText.getText())) {
-						mCreateRoomButton.setEnabled(false);
-					} else {
-						mCreateRoomButton.setEnabled(true);
-					}
-
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-            }
-        });
         mRoomDescriptionInputTIL.setCounterMaxLength(INPUT_DESC_MAX_LENGTH);
-        mRoomDescriptionEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (!isValidDescLength(charSequence)) {
-                    mRoomDescriptionInputTIL.setError("Room description must have no more than 120 characters");
-					mRoomDescriptionInputTIL.setHintTextAppearance(R.style.error_text_appearance);
-                    mCreateRoomButton.setEnabled(false);
-                } else {
-					mRoomDescriptionInputTIL.setError("");
-					mRoomDescriptionInputTIL.setHintTextAppearance(R.style.text_input_text_appearance);
-                    if (!isValidNameLength(mRoomNameEditText.getText()) || !isValidIdLength(mRoomIdEditText.getText())) {
-						mCreateRoomButton.setEnabled(false);
-					} else {
-						mCreateRoomButton.setEnabled(true);
-					}
-
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-            }
-        });
+        mRoomDescriptionEditText.addTextChangedListener(new InputDescriptionListener());
     }
 
     private void setupDatabase() {
@@ -311,7 +241,7 @@ public class CreateRoomActivity extends DialogActivity {
 	private void chooseImage() {
 		EZPhotoPickConfig config = new EZPhotoPickConfig();
 		config.photoSource = PhotoSource.GALLERY;
-		config.exportingSize = 800;
+		config.exportingSize = 500;
 		EZPhotoPick.startPhotoPickActivity(this, config);
 	}
 
@@ -341,6 +271,90 @@ public class CreateRoomActivity extends DialogActivity {
 				}
 			});
 		} else callback.sendDataToDatabase(null);
+	}
+
+	class InputNameLisener implements TextWatcher {
+		@Override
+		public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+		}
+
+		@Override
+		public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+			if (!isValidNameLength(charSequence)) {
+				mRoomNameInputTIL.setError("Room Name must have between" +
+						INPUT_NAME_MIN_LENGTH +
+						" and " + INPUT_NAME_MAX_LENGTH + " characters");
+				mRoomNameInputTIL.setHintTextAppearance(R.style.error_text_appearance);
+				mCreateRoomButton.setEnabled(false);
+			} else {
+				mRoomNameInputTIL.setError("");
+				mRoomNameInputTIL.setHintTextAppearance(R.style.text_input_text_appearance);
+				if (!isValidIdLength(mRoomIdEditText.getText())) {
+					mCreateRoomButton.setEnabled(false);
+				} else {
+					mCreateRoomButton.setEnabled(true);
+				}
+			}
+		}
+
+		@Override
+		public void afterTextChanged(Editable editable) {
+		}
+	}
+
+	class InputIdListener implements TextWatcher {
+		@Override
+		public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+		}
+
+		@Override
+		public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+			if (!isValidIdLength(charSequence)) {
+				mRoomIdInputTIL.setError("Room ID must have between "+ INPUT_ID_MIN_LENGTH +" and " + INPUT_ID_MAX_LENGTH + " characters");
+				mRoomIdInputTIL.setHintTextAppearance(R.style.error_text_appearance);
+				mCreateRoomButton.setEnabled(false);
+			} else {
+				mRoomIdInputTIL.setError("");
+				mRoomIdInputTIL.setHintTextAppearance(R.style.text_input_text_appearance);
+				if (!isValidNameLength(mRoomNameEditText.getText())) {
+					mCreateRoomButton.setEnabled(false);
+				} else {
+					mCreateRoomButton.setEnabled(true);
+				}
+			}
+		}
+
+		@Override
+		public void afterTextChanged(Editable editable) {
+		}
+	}
+
+	class InputDescriptionListener implements TextWatcher {
+		@Override
+		public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+		}
+
+		@Override
+		public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+			if (!isValidDescLength(charSequence)) {
+				mRoomDescriptionInputTIL.setError("Room description must have no more than " + INPUT_DESC_MAX_LENGTH + " characters");
+				mRoomDescriptionInputTIL.setHintTextAppearance(R.style.error_text_appearance);
+				mCreateRoomButton.setEnabled(false);
+			} else {
+				mRoomDescriptionInputTIL.setError("");
+				mRoomDescriptionInputTIL.setHintTextAppearance(R.style.text_input_text_appearance);
+				if (!isValidNameLength(mRoomNameEditText.getText()) || !isValidIdLength(mRoomIdEditText.getText())) {
+					mCreateRoomButton.setEnabled(false);
+				} else {
+					mCreateRoomButton.setEnabled(true);
+				}
+
+			}
+		}
+
+		@Override
+		public void afterTextChanged(Editable editable) {
+		}
 	}
 
 	interface OnUploadPhotoSuccess {

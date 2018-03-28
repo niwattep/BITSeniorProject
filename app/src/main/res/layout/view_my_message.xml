@@ -6,7 +6,9 @@
     android:layout_height="wrap_content"
     android:gravity="end|bottom"
     android:orientation="horizontal"
-    android:padding="8dp">
+    android:paddingTop="@dimen/margin_padding"
+    android:paddingLeft="@dimen/margin_padding"
+    android:paddingRight="@dimen/margin_padding">
 
     <TextView
         android:id="@+id/tv_name"
@@ -17,6 +19,7 @@
         android:textSize="8sp"
         app:layout_constraintBottom_toTopOf="@+id/frameLayout"
         app:layout_constraintEnd_toEndOf="@+id/frameLayout"
+        android:visibility="gone"
         tools:text="Peter Pancake" />
 
     <FrameLayout
@@ -30,14 +33,14 @@
 
         <ImageView
             android:id="@+id/iv_message"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
             android:background="@drawable/round_image"
             android:contentDescription="@null"
-            android:maxWidth="200dp"
-            android:scaleType="centerInside"
+            android:scaleType="centerCrop"
             app:layout_constraintEnd_toStartOf="@+id/iv_profile"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="gone"/>
 
         <TextView
             android:id="@+id/tv_message"
@@ -45,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:background="@drawable/my_message"
-            android:maxWidth="200dp"
+            android:maxWidth="250dp"
             android:textColor="@color/colorTextIcon"
             android:textSize="@dimen/text_size_large"
             app:layout_constraintEnd_toStartOf="@+id/iv_profile"
@@ -71,8 +74,8 @@
         android:layout_height="@dimen/profile_size"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/com_facebook_profile_picture_blank_square"
-        android:visibility="gone"/>
+        tools:src="@drawable/com_facebook_profile_picture_blank_square" />
 </android.support.constraint.ConstraintLayout>

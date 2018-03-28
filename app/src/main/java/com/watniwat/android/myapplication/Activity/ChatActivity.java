@@ -3,11 +3,13 @@ package com.watniwat.android.myapplication.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -28,6 +30,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.watniwat.android.myapplication.Constant;
+import com.watniwat.android.myapplication.Fragment.ConfirmDialog;
 import com.watniwat.android.myapplication.Model.Message;
 import com.watniwat.android.myapplication.Adapter.MessageAdapter;
 import com.watniwat.android.myapplication.R;
@@ -73,7 +76,6 @@ public class ChatActivity extends AppCompatActivity {
         setupFirebaseAuth();
         setupFirebaseDatabase();
         setupStorage();
-
         loadMessages();
     }
 
@@ -99,7 +101,9 @@ public class ChatActivity extends AppCompatActivity {
 
     private void setupFirebaseAuth() {
         user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user == null) goToLoginScreen();
+        if (user == null) {
+            goToLoginScreen();
+        }
     }
 
     private void setupFirebaseDatabase() {
@@ -137,12 +141,33 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.chat_menu, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
         if (id == android.R.id.home) {
             finish();
             return true;
+        } else if (id == R.id.chat_leave_room) {
+            android.app.FragmentManager fragmentManager = getFragmentManager();
+            ConfirmDialog dialog = ConfirmDialog.newInstance("Do you want to leave this room", "Yes", "No");
+            dialog.setOnFinishDialogListener(new ConfirmDialog.OnFinishDialogListener() {
+                @Override
+                public void onFinish(ConfirmDialog.Button button) {
+                    if (button == ConfirmDialog.Button.POSITIVE) {
+                        leaveRoom();
+                        finish();
+                    } else {
+                        //TODO cancel
+                    }
+                }
+            });
+            dialog.show(fragmentManager, null);
         }
 
         return super.onOptionsItemSelected(item);
@@ -206,7 +231,7 @@ public class ChatActivity extends AppCompatActivity {
     private void pickImage() {
         EZPhotoPickConfig config = new EZPhotoPickConfig();
         config.photoSource = PhotoSource.GALLERY;
-        config.exportingSize = 800;
+        config.exportingSize = 500;
         EZPhotoPick.startPhotoPickActivity(this, config);
     }
 
@@ -228,7 +253,7 @@ public class ChatActivity extends AppCompatActivity {
                 DatabaseReference databaseReference = mThisRoomMessagesReference.push();
                 Message message = new Message(user.getUid(), user.getDisplayName(),
                         Message.DATA_TYPE_TEXT, text, user.getPhotoUrl() == null? null : user.getPhotoUrl().toString(),
-                        System.currentTimeMillis());
+                        System.currentTimeMillis(), roomName);
                 databaseReference.setValue(message);
                 mMessageEditText.setText("");
             } else {
@@ -244,7 +269,7 @@ public class ChatActivity extends AppCompatActivity {
 
             StorageReference photoReference = mStorageRef.child(fileName);
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            pickedPhoto.compress(Bitmap.CompressFormat.JPEG, 60, byteArrayOutputStream);
+            pickedPhoto.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
 
             byte[] data = byteArrayOutputStream.toByteArray();
             UploadTask uploadTask = photoReference.putBytes(data);
@@ -254,7 +279,7 @@ public class ChatActivity extends AppCompatActivity {
                     Message message = new Message(user.getUid(), user.getDisplayName(),
                             Message.DATA_TYPE_IMAGE, taskSnapshot.getDownloadUrl().toString(),
                             user.getPhotoUrl() == null? null : user.getPhotoUrl().toString(),
-                            System.currentTimeMillis());
+                            System.currentTimeMillis(), roomName);
                     databaseReference.setValue(message);
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -290,7 +315,10 @@ public class ChatActivity extends AppCompatActivity {
         startActivity(new Intent(this, SignInActivity.class));
     }
 
-    interface OnUploadPhotoSuccess {
-        void sendDataToDatabase();
+    private void leaveRoom() {
+        DatabaseReference roomUsers = mFirebaseDatabase.getReference(Constant.ROOM_USERS);
+        DatabaseReference userRooms = mFirebaseDatabase.getReference(Constant.USER_ROOMS);
+        roomUsers.child(roomUId).child(user.getUid()).removeValue();
+        userRooms.child(user.getUid()).child(roomUId).removeValue();
     }
 }

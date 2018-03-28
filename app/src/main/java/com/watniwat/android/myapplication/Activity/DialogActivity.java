@@ -23,6 +23,7 @@ public class DialogActivity extends AppCompatActivity {
 		if (!isLoading()) {
 			dialog.setMessage("Loading...");
 			dialog.setIndeterminate(true);
+			dialog.setCancelable(false);
 			dialog.show();
 		}
 	}

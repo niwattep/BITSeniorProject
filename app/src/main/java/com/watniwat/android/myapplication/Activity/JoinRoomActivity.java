@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -25,8 +26,8 @@ import com.watniwat.android.myapplication.Constant;
 import com.watniwat.android.myapplication.Model.Room;
 import com.watniwat.android.myapplication.R;
 
-public class JoinRoomActivity extends AppCompatActivity {
-	private final int INPUT_MAX = 10;
+public class JoinRoomActivity extends DialogActivity {
+	private final int INPUT_MAX = 15;
 	private final int INPUT_MIN = 4;
 	private EditText mRoomIdInputEditText;
 	private Button mJoinRoomButton;
@@ -80,7 +81,7 @@ public class JoinRoomActivity extends AppCompatActivity {
 			@Override
 			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 				if (charSequence.length() < INPUT_MIN || charSequence.length() > INPUT_MAX) {
-					mRoomIdInputTIL.setError("Room ID must have between 4 and 10 characters ");
+					mRoomIdInputTIL.setError("Room ID must have between 4 and 15 characters ");
 					mRoomIdInputTIL.setHintTextAppearance(R.style.error_text_appearance);
 					mJoinRoomButton.setEnabled(false);
 				} else {
@@ -110,9 +111,7 @@ public class JoinRoomActivity extends AppCompatActivity {
 
 	private void setupFirebaseAuth() {
 		user = FirebaseAuth.getInstance().getCurrentUser();
-		if (user != null) {
-			String uid = user.getUid();
-		} else {
+		if (user == null) {
 			goToLoginScreen();
 		}
 	}
@@ -126,20 +125,24 @@ public class JoinRoomActivity extends AppCompatActivity {
 	}
 
 	private void joinRoom(final String roomId) {
+		showLoading();
 		mRoomIdRef.addListenerForSingleValueEvent(new ValueEventListener() {
 			@Override
 			public void onDataChange(DataSnapshot dataSnapshot) {
+				Log.d(Constant.LOG_TAG, "datasnapshot hasChild: " + dataSnapshot.hasChild(roomId));
 				if (dataSnapshot.hasChild(roomId)) {
 					String roomUId = dataSnapshot.child(roomId).getValue(String.class);
+					Log.d(Constant.LOG_TAG, "Room UID: " + roomUId);
 					getRoom(roomUId);
-				} else
-					Snackbar.make(mJoinRoomButton, "Room not found", Snackbar.LENGTH_SHORT)
+				} else {
+					hideLoading();
+					Snackbar.make(mJoinRoomButton, "Room not found", Snackbar.LENGTH_LONG)
 							.setAction("OK", new View.OnClickListener() {
 								@Override
 								public void onClick(View view) {
-
 								}
 							}).show();
+				}
 			}
 
 			@Override
@@ -171,6 +174,7 @@ public class JoinRoomActivity extends AppCompatActivity {
 
 		Intent intent = getIntent();
 		setResult(RESULT_OK, intent);
+		hideLoading();
 		finish();
 	}
 

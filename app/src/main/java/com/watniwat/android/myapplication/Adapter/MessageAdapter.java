@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.watniwat.android.myapplication.ViewHolder.MessageViewHolder;
 import com.watniwat.android.myapplication.Model.Message;
@@ -57,16 +58,16 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
 
         if (message.getDataType().equals(Message.DATA_TYPE_IMAGE)) {
             holder.mMessageTextView.setVisibility(View.GONE);
-            holder.mImageMessageImageView.setVisibility(View.VISIBLE);
             holder.mImageMessageImageView.setClipToOutline(true);
             Glide.with(holder.itemView.getContext())
                     .load(message.getData())
-                    .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
                     .into(holder.mImageMessageImageView);
+            holder.mImageMessageImageView.setVisibility(View.VISIBLE);
         }
         if (message.getDataType().equals(Message.DATA_TYPE_TEXT)) {
             Glide.with(holder.itemView.getContext()).clear(holder.mImageMessageImageView);
             holder.mImageMessageImageView.setVisibility(View.GONE);
+            holder.mMessageTextView.setVisibility(View.VISIBLE);
             holder.mMessageTextView.setText(message.getData());
         }
         holder.mNameTextView.setText(message.getUserName());

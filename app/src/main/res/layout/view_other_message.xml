@@ -6,7 +6,9 @@
     android:layout_height="wrap_content"
     android:gravity="start|bottom"
     android:orientation="horizontal"
-    android:padding="8dp">
+    android:paddingTop="@dimen/margin_padding"
+    android:paddingLeft="@dimen/margin_padding"
+    android:paddingRight="@dimen/margin_padding">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/iv_profile"
@@ -44,7 +46,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/other_message"
-            android:maxWidth="200dp"
+            android:maxWidth="250dp"
             android:textColor="@color/colorTextIcon"
             android:textSize="@dimen/text_size_large"
             app:layout_constraintStart_toEndOf="@+id/iv_profile"
@@ -54,12 +56,11 @@
 
         <ImageView
             android:id="@+id/iv_message"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
             android:background="@drawable/round_image"
             android:contentDescription="@null"
-            android:maxWidth="200dp"
-            android:scaleType="centerInside"
+            android:scaleType="centerCrop"
             app:layout_constraintStart_toEndOf="@+id/iv_profile"
             app:layout_constraintTop_toTopOf="parent" />
     </FrameLayout>

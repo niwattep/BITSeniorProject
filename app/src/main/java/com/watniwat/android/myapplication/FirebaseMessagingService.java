@@ -1,6 +1,5 @@
 package com.watniwat.android.myapplication;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -9,18 +8,19 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.messaging.RemoteMessage;
 import com.watniwat.android.myapplication.Activity.ChatActivity;
+import com.watniwat.android.myapplication.Activity.RoomListActivity;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.Map;
+
+import static com.watniwat.android.myapplication.Activity.RoomListActivity.EXTRA_ROOM_NAME;
 
 /**
  * Created by Niwat on 06-Feb-18.
@@ -28,53 +28,55 @@ import java.util.Map;
 
 public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
 
+	private static final String EXTRA_ROOM_UID = "extra-room-uid";
+	private static final String EXTRA_ROOM_NAME = "extra-room-name";
+
 	@Override
 	public void onMessageReceived(RemoteMessage remoteMessage) {
 		super.onMessageReceived(remoteMessage);
-		RemoteMessage.Notification notification = remoteMessage.getNotification();
 		Map<String, String> data = remoteMessage.getData();
 
-		if (!data.get("userUId").equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-			sendNotification(notification);
+		Log.d(Constant.LOG_TAG, data.toString());
+		if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+			if (data.get("senderUId") != null &&
+					!data.get("senderUId").equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+				sendNotification(data);
+			}
 		}
 	}
 
-	private void sendNotification(RemoteMessage.Notification notification) {
-		Bitmap icon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+	private void sendNotification(Map<String, String> data) {
+		String senderName = data.get("senderName");
+		String content = data.get("content");
+		String roomName = data.get("roomName");
+		String roomUId = data.get("roomUId");
+		String type = data.get("type");
 
 		Intent intent = new Intent(this, ChatActivity.class);
+		intent.putExtra(EXTRA_ROOM_UID, roomUId);
+		intent.putExtra(EXTRA_ROOM_NAME, roomName);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
 		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
+		Bitmap icon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+
+		long[] vibrate = {0, 500, 500, 500};
+
+		String contentText = type.equals("text") ? "@" + senderName + " says: " + content : "@" + senderName + " " + content;
+
 		NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "channel_id")
-				.setContentTitle(notification.getTitle())
-				.setContentText(notification.getBody())
+				.setContentTitle(roomName)
+				.setContentText(contentText)
 				.setAutoCancel(true)
-				.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+				.setSound(Uri.parse("android.resource://" + this.getPackageName() + "/" + R.raw.unconvinced))
+				.setVibrate(vibrate)
 				.setContentIntent(pendingIntent)
-				.setContentInfo(notification.getTitle())
-				.setLargeIcon(icon)
-				.setColor(Color.RED)
-				.setLights(Color.RED, 1000, 300)
-				.setDefaults(Notification.DEFAULT_VIBRATE)
 				.setSmallIcon(R.mipmap.ic_launcher)
-				.setStyle(new NotificationCompat.InboxStyle());
+				.setLargeIcon(icon)
+				.setPriority(NotificationCompat.PRIORITY_HIGH);
 
 		NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			NotificationChannel channel = new NotificationChannel(
-					"channel_id", "channel_name", NotificationManager.IMPORTANCE_DEFAULT
-			);
-			channel.setDescription("channel description");
-			channel.setShowBadge(true);
-			channel.canShowBadge();
-			channel.enableLights(true);
-			channel.setLightColor(Color.RED);
-			channel.enableVibration(true);
-			channel.setVibrationPattern(new long[]{100, 200, 300, 400, 500});
-			notificationManager.createNotificationChannel(channel);
-		}
 
 		notificationManager.notify(0, notificationBuilder.build());
 	}

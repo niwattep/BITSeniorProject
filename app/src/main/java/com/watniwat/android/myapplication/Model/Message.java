@@ -23,17 +23,19 @@ public class Message {
     private String dataType;
     private String data;
     private String photoUrl;
+    private String roomName;
     private long timeStamp;
 
     public Message() {}
 
-    public Message(String userUId, String userName, String dataType, String data, String photoUrl, long timeStamp) {
+    public Message(String userUId, String userName, String dataType, String data, String photoUrl, long timeStamp, String roomName) {
         this.userUId = userUId;
         this.userName = userName;
         this.dataType = dataType;
         this.data = data;
         this.photoUrl = photoUrl;
         this.timeStamp = timeStamp;
+        this.roomName = roomName;
     }
 
     public String getUserUId() {
@@ -58,6 +60,10 @@ public class Message {
 
     public long getTimeStamp() {
         return timeStamp;
+    }
+
+    public String getRoomName() {
+        return roomName;
     }
 
     @Override
