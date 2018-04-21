@@ -163,7 +163,6 @@ public class ChatActivity extends AppCompatActivity {
                         leaveRoom();
                         finish();
                     } else {
-                        //TODO cancel
                     }
                 }
             });

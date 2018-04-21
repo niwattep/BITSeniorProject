@@ -17,14 +17,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".Activity.RoomListActivity" />
-        <activity android:name=".Activity.CourseDetailActivity" />
         <activity
             android:name=".Activity.CreateRoomActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.SignInActivity"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.AppCompat">
+            android:label="@string/app_name">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

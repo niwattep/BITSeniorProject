@@ -51,7 +51,6 @@
         tools:src="@drawable/messenger_bubble_large_blue" />
 
     <TextView
-        android:id="@+id/divider"
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:layout_marginEnd="8dp"
