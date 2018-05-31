@@ -12,18 +12,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
+import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.IdpResponse;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -39,12 +37,14 @@ import com.watniwat.android.myapplication.R;
 import com.watniwat.android.myapplication.Utilities;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RoomListActivity extends AppCompatActivity {
     private static final int RC_CREATE_ROOM = 1234;
     private static final int RC_REGISTER_ROOM = 5678;
+    private static final int RC_SIGN_IN = 9010;
     public static final String EXTRA_ROOM_UID = "extra-room-uid";
     public static final String EXTRA_ROOM_NAME = "extra-room-name";
     private Toolbar mToolbar;
@@ -61,12 +61,7 @@ public class RoomListActivity extends AppCompatActivity {
     private RoomAdapter mRoomsAdapter;
     private ArrayList<Room> rooms;
 
-    private GoogleApiClient mGoogleApiClient;
-    private FirebaseUser user;
-
     private DatabaseReference mThisUserRoomsRef;
-
-    private ValueEventListener mRoomEventListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,22 +70,28 @@ public class RoomListActivity extends AppCompatActivity {
 
         bindView();
         setupView();
-        setupGoogleSignIn();
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            startSignIn();
+        }
+        setupDrawer();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        setupFirebaseAuth();
-        setupFirebaseDatabase();
-        setupDrawer();
-        loadRooms();
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            startSignIn();
+        } else {
+            loadRooms();
+        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        rooms.clear();
+        if (rooms != null) {
+            rooms.clear();
+        }
     }
 
     private void bindView() {
@@ -108,7 +109,6 @@ public class RoomListActivity extends AppCompatActivity {
         mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, 0, 0);
         mDrawerLayout.addDrawerListener(mActionBarDrawerToggle);
         mActionBarDrawerToggle.syncState();
-
     }
 
     private void setupView() {
@@ -142,39 +142,20 @@ public class RoomListActivity extends AppCompatActivity {
         });
     }
 
-    private void setupGoogleSignIn() {
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, null)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-    }
-
-    private void setupFirebaseAuth() {
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user == null) {
-            goToLoginScreen();
-        }
-    }
-
-    private void setupFirebaseDatabase() {
-        mThisUserRoomsRef = FirebaseDatabase.getInstance().getReference(Constant.USER_ROOMS).child(user.getUid());
-    }
-
     private void setupDrawer() {
-        if (user.getDisplayName() != null) {
-            mDrawerDisplayName.setText(user.getDisplayName());
-        } else {
-            mDrawerDisplayName.setText(user.getEmail());
-        }
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            if (user.getDisplayName() != null) {
+                mDrawerDisplayName.setText(user.getDisplayName());
+            } else {
+                mDrawerDisplayName.setText(user.getEmail());
+            }
 
-        mDrawerEmail.setText(user.getEmail());
-        if (user.getPhotoUrl() == null) {
-            Glide.with(this).load(R.drawable.ic_002_boy_1).into(mDrawerProfilePic);
-        } else Glide.with(this).load(user.getPhotoUrl()).into(mDrawerProfilePic);
+            mDrawerEmail.setText(user.getEmail());
+            if (user.getPhotoUrl() == null) {
+                Glide.with(this).load(R.drawable.ic_002_boy_1).into(mDrawerProfilePic);
+            } else Glide.with(this).load(user.getPhotoUrl()).into(mDrawerProfilePic);
+        }
     }
 
     @Override
@@ -188,8 +169,17 @@ public class RoomListActivity extends AppCompatActivity {
         }
 
         if (requestCode == RC_REGISTER_ROOM) {
-            if (requestCode == RESULT_OK) {
+            if (resultCode == RESULT_OK) {
                 Utilities.showToast("Room Registered!", this);
+            }
+        }
+
+        if (requestCode == RC_SIGN_IN) {
+            IdpResponse response = IdpResponse.fromResultIntent(data);
+            if (resultCode == RESULT_CANCELED) {
+                if (response != null) {
+                    Toast.makeText(this, "Sign-in Error", Toast.LENGTH_LONG).show();
+                }
             }
         }
     }
@@ -222,9 +212,11 @@ public class RoomListActivity extends AppCompatActivity {
     private void loadRooms() {
         rooms = new ArrayList<>();
         setupRoomsRecyclerView();
-        mRoomEventListener = roomEventListener();
-        mThisUserRoomsRef.addListenerForSingleValueEvent(mRoomEventListener);
-        Log.d("ME", "Child event listener added. The size of rooms is " + rooms.size());
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            mThisUserRoomsRef = FirebaseDatabase.getInstance().getReference(Constant.USER_ROOMS).child(user.getUid());
+            mThisUserRoomsRef.addListenerForSingleValueEvent(roomEventListener());
+        }
     }
 
     private void setupRoomsRecyclerView() {
@@ -251,38 +243,6 @@ public class RoomListActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
-            }
-        };
-    }
-
-    private ChildEventListener onRoomsEventListener() {
-        return new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Room newRoom = dataSnapshot.getValue(Room.class);
-                rooms.add(newRoom);
-                mRoomsAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                Room removedRoom = dataSnapshot.getValue(Room.class);
-                rooms.remove(removedRoom);
-                mRoomsAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Utilities.showToast("Error loading data.", getApplicationContext());
             }
         };
     }
@@ -301,26 +261,24 @@ public class RoomListActivity extends AppCompatActivity {
     }
 
     private void signOut() {
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(@NonNull Status status) {
-                        if (status.isSuccess()) {
-                            FirebaseAuth.getInstance().signOut();
-                            goToLoginScreen();
-                        } else {
-                            onSignOutFailure();
-                        }
-                    }
-                });
+        AuthUI.getInstance().signOut(this).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                onSignOutFailure();
+            }
+        });
     }
 
     private void onSignOutFailure() {
-        Utilities.showToast("Sign out failed. Please try again.", this);
+        Utilities.showToast("Sign-out failed. Please try again.", this);
     }
 
-    private void goToLoginScreen() {
-        finish();
-        startActivity(new Intent(this, SignInActivity.class));
+    private void startSignIn() {
+        Intent intent = AuthUI.getInstance().createSignInIntentBuilder()
+                .setAvailableProviders(Arrays.asList(new AuthUI.IdpConfig.EmailBuilder().build()))
+                .setIsSmartLockEnabled(false)
+                .build();
+
+        startActivityForResult(intent, RC_SIGN_IN);
     }
 }

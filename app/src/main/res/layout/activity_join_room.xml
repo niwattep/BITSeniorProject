@@ -26,7 +26,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:layout_marginLeft="16dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         app:counterEnabled="true"
@@ -43,7 +42,7 @@
             android:id="@+id/edt_room_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Room ID" />
+            android:hint="@string/room_id" />
     </android.support.design.widget.TextInputLayout>
 
 
@@ -56,7 +55,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:padding="16dp"
-        android:text="Join"
+        android:text="@string/join"
         android:textSize="20sp"
         android:theme="@style/AppTheme.Button"
         app:layout_constraintEnd_toEndOf="parent"

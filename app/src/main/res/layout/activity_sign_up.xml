@@ -22,9 +22,9 @@
             android:id="@+id/edt_email_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_email_white_24px"
+            android:drawableStart="@drawable/ic_email_white_24px"
             android:drawablePadding="8dp"
-            android:hint="Email Address"
+            android:hint="@string/email_address"
             android:inputType="textEmailAddress" />
     </android.support.design.widget.TextInputLayout>
 
@@ -45,9 +45,9 @@
             android:id="@+id/edt_password_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_lock_open_white_24px"
+            android:drawableStart="@drawable/ic_lock_open_white_24px"
             android:drawablePadding="8dp"
-            android:hint="Password"
+            android:hint="@string/password"
             android:inputType="textPassword" />
     </android.support.design.widget.TextInputLayout>
 
@@ -68,9 +68,9 @@
             android:id="@+id/edt_display_name_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_account_box_white_24px"
+            android:drawableStart="@drawable/ic_account_box_white_24px"
             android:drawablePadding="8dp"
-            android:hint="Display Name"
+            android:hint="@string/display_name"
             android:inputType="textEmailAddress" />
     </android.support.design.widget.TextInputLayout>
 
@@ -81,7 +81,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="24dp"
-        android:text="Sign Up"
+        android:text="@string/sign_up"
         android:theme="@style/AppTheme.Button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

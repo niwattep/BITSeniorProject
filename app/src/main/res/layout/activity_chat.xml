@@ -18,7 +18,7 @@
             android:background="?attr/colorPrimary" />
 
     </android.support.design.widget.AppBarLayout>
-    
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -55,7 +55,8 @@
             android:clickable="true"
             android:src="@drawable/ic_attach_file_black_24px"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:focusable="true" />
 
         <ImageView
             android:id="@+id/btn_send_image"
@@ -66,7 +67,8 @@
             android:padding="8dp"
             android:src="@drawable/ic_photo_size_select_actual_black_24px"
             app:layout_constraintStart_toEndOf="@+id/btn_attach_file"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:focusable="true" />
 
         <EditText
             android:id="@+id/edt_message"
@@ -93,7 +95,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginTop="8dp"
             android:background="@drawable/round_button"
-            android:drawableLeft="@drawable/ic_send_white_24px"
+            android:drawableStart="@drawable/ic_send_white_24px"
             android:gravity="bottom"
             android:minWidth="0dp"
             android:paddingEnd="8dp"
@@ -101,8 +103,5 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </android.support.constraint.ConstraintLayout>
-
-
-
 
 </LinearLayout>

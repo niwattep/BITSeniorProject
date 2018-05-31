@@ -247,7 +247,7 @@ public class CreateRoomActivity extends DialogActivity {
 
 	private void uploadFileAndCreateRoom(String roomUId, final OnUploadPhotoSuccess callback) {
     	if (pickedPhoto != null) {
-			StorageReference photoReference = mStorageRef.child(roomUId + ".jpg");
+			final StorageReference photoReference = mStorageRef.child(roomUId + ".jpg");
 			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 			pickedPhoto.compress(Bitmap.CompressFormat.JPEG, 60, byteArrayOutputStream);
 
@@ -256,7 +256,7 @@ public class CreateRoomActivity extends DialogActivity {
 			uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
 				@Override
 				public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-					callback.sendDataToDatabase(taskSnapshot.getDownloadUrl().toString());
+					callback.sendDataToDatabase(photoReference.getDownloadUrl().getResult().toString());
 				}
 			}).addOnFailureListener(new OnFailureListener() {
 				@Override

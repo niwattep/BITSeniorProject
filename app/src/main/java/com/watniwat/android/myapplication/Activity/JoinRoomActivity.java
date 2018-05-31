@@ -1,6 +1,8 @@
 package com.watniwat.android.myapplication.Activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -42,10 +45,14 @@ public class JoinRoomActivity extends DialogActivity {
 	private DatabaseReference mRoomUsersRef;
 	private DatabaseReference mRoomsRef;
 
+	private Context context;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_join_room);
+
+		context = this;
 
 		bindView();
 		setupFirebaseAuth();
@@ -63,38 +70,12 @@ public class JoinRoomActivity extends DialogActivity {
 
 	private void setupView() {
 		setSupportActionBar(mToolbar);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		mJoinRoomButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				if (!mRoomIdInputEditText.getText().toString().isEmpty()) {
-					joinRoom(mRoomIdInputEditText.getText().toString());
-				}
-			}
-		});
+		if (getSupportActionBar() != null) {
+			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		}
+		mJoinRoomButton.setOnClickListener(new OnJoinRoomButtonClickListener());
 		mRoomIdInputTIL.setCounterMaxLength(INPUT_MAX);
-		mRoomIdInputEditText.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-			}
-
-			@Override
-			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-				if (charSequence.length() < INPUT_MIN || charSequence.length() > INPUT_MAX) {
-					mRoomIdInputTIL.setError("Room ID must have between 4 and 15 characters ");
-					mRoomIdInputTIL.setHintTextAppearance(R.style.error_text_appearance);
-					mJoinRoomButton.setEnabled(false);
-				} else {
-					mRoomIdInputTIL.setError("");
-					mRoomIdInputTIL.setHintTextAppearance(R.style.text_input_text_appearance);
-					mJoinRoomButton.setEnabled(true);
-				}
-			}
-
-			@Override
-			public void afterTextChanged(Editable editable) {
-			}
-		});
+		mRoomIdInputEditText.addTextChangedListener(new RoomIdTextWatcher());
 	}
 
 	@Override
@@ -167,19 +148,67 @@ public class JoinRoomActivity extends DialogActivity {
 		});
 	}
 
-	private void join(Room room) {
-		mUserRoomsRef.child(user.getUid()).child(room.getRoomUId()).setValue(room);
-		mRoomUsersRef.child(room.getRoomUId()).child(user.getUid()).setValue(true);
-		FirebaseMessaging.getInstance().subscribeToTopic(room.getRoomUId());
+	private void join(final Room room) {
+		if (room != null) {
 
-		Intent intent = getIntent();
-		setResult(RESULT_OK, intent);
-		hideLoading();
-		finish();
+			mUserRoomsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+				@Override
+				public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+					if (dataSnapshot.child(user.getUid()).hasChild(room.getRoomUId())) {
+						Toast.makeText(context, "You have already join this room.", Toast.LENGTH_LONG).show();
+						hideLoading();
+					} else {
+						mUserRoomsRef.child(user.getUid()).child(room.getRoomUId()).setValue(room);
+						mRoomUsersRef.child(room.getRoomUId()).child(user.getUid()).setValue(true);
+						FirebaseMessaging.getInstance().subscribeToTopic(room.getRoomUId());
+
+						setResult(RESULT_OK, getIntent());
+						hideLoading();
+						finish();
+					}
+				}
+
+				@Override
+				public void onCancelled(DatabaseError databaseError) {
+
+				}
+			});
+		}
 	}
 
 	private void goToLoginScreen() {
 		finish();
-		startActivity(new Intent(this, SignInActivity.class));
+	}
+
+	private class OnJoinRoomButtonClickListener implements View.OnClickListener {
+		@Override
+		public void onClick(View view) {
+			if (!mRoomIdInputEditText.getText().toString().isEmpty()) {
+				joinRoom(mRoomIdInputEditText.getText().toString());
+			}
+		}
+	}
+
+	private class RoomIdTextWatcher implements TextWatcher {
+		@Override
+		public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+		}
+
+		@Override
+		public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+			if (charSequence.length() < INPUT_MIN || charSequence.length() > INPUT_MAX) {
+				mRoomIdInputTIL.setError("Room ID must have between 4 and 15 characters ");
+				mRoomIdInputTIL.setHintTextAppearance(R.style.error_text_appearance);
+				mJoinRoomButton.setEnabled(false);
+			} else {
+				mRoomIdInputTIL.setError("");
+				mRoomIdInputTIL.setHintTextAppearance(R.style.text_input_text_appearance);
+				mJoinRoomButton.setEnabled(true);
+			}
+		}
+
+		@Override
+		public void afterTextChanged(Editable editable) {
+		}
 	}
 }

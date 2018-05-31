@@ -2,8 +2,8 @@ package com.watniwat.android.myapplication.Activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -179,7 +179,7 @@ public class ChatActivity extends AppCompatActivity {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Message message = dataSnapshot.getValue(Message.class);
                 messageList.add(0, message);
-                mMessageAdapter.notifyDataSetChanged();
+                mMessageAdapter.notifyItemInserted(0);
                 mChatRecyclerView.scrollToPosition(0);
             }
 
@@ -262,25 +262,23 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
-    private void sendImageMessage(Bitmap pickedPhoto) {
+    private void uploadImage(Bitmap pickedPhoto) {
         if (pickedPhoto != null) {
             final DatabaseReference databaseReference = mThisRoomMessagesReference.push();
             String fileName = databaseReference.getKey() + ".jpg";
 
-            StorageReference photoReference = mStorageRef.child(fileName);
+            final StorageReference photoReference = mStorageRef.child(fileName);
+
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            pickedPhoto.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+            pickedPhoto.compress(Bitmap.CompressFormat.JPEG, 60, byteArrayOutputStream);
 
             byte[] data = byteArrayOutputStream.toByteArray();
+
             UploadTask uploadTask = photoReference.putBytes(data);
             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Message message = new Message(user.getUid(), user.getDisplayName(),
-                            Message.DATA_TYPE_IMAGE, taskSnapshot.getDownloadUrl().toString(),
-                            user.getPhotoUrl() == null? null : user.getPhotoUrl().toString(),
-                            System.currentTimeMillis(), roomName);
-                    databaseReference.setValue(message);
+                    sendMessageWithPhoto(databaseReference, photoReference);
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -289,6 +287,21 @@ public class ChatActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private void sendMessageWithPhoto(final DatabaseReference databaseReference, final StorageReference photoReference) {
+        photoReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                String url = uri.toString();
+
+                Message message = new Message(user.getUid(), user.getDisplayName(),
+                        Message.DATA_TYPE_IMAGE, url,
+                        user.getPhotoUrl() == null? null : user.getPhotoUrl().toString(),
+                        System.currentTimeMillis(), roomName);
+                databaseReference.setValue(message);
+            }
+        });
     }
 
     private void pickFile() {
@@ -301,7 +314,7 @@ public class ChatActivity extends AppCompatActivity {
                 resultCode == RESULT_OK) {
             try {
                 Bitmap pickedPhoto = new EZPhotoPickStorage(this).loadLatestStoredPhotoBitmap();
-                sendImageMessage(pickedPhoto);
+                uploadImage(pickedPhoto);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -312,7 +325,6 @@ public class ChatActivity extends AppCompatActivity {
 
     private void goToLoginScreen() {
         finish();
-        startActivity(new Intent(this, SignInActivity.class));
     }
 
     private void leaveRoom() {

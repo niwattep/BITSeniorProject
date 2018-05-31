@@ -16,31 +16,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activity.RoomListActivity" />
-        <activity android:name=".Activity.CourseDetailActivity" />
-        <activity
-            android:name=".Activity.CreateRoomActivity"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".Activity.SignInActivity"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.AppCompat">
-
+        <activity android:name=".Activity.RoomListActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".Activity.CreateRoomActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.ChatActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.JoinRoomActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".Activity.SignUpActivity"
-            android:theme="@style/Theme.AppCompat" />
 
         <service android:name=".FirebaseMessagingService">
             <intent-filter>
@@ -53,9 +43,6 @@
             </intent-filter>
         </service>
 
-        <activity
-            android:name=".Activity.ResetPasswordActivity"
-            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>
